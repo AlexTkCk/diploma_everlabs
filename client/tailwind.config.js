@@ -16,7 +16,7 @@ module.exports = {
         'paragraph-md': '0.875rem', // 14px
         'paragraph-sm': '0.75rem', // 12px
 
-        'button': '2rem', // 16px
+        'button': '2rem', // 32px
       },
       boxShadow: {
         'neon': '0 0 2px #fff,inset 0 0 2px #fff,0 0 5px #0f8,0 0 15px #0f8,0 0 30px #0f8',
