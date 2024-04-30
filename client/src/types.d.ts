@@ -1,0 +1,1 @@
+export type TThemeColor = 'green' | 'red' | 'yellow' | 'black' | 'blue';
