@@ -7,7 +7,7 @@ function App() {
     <Router>
       <div>Future navigation</div>
       <AnimRoutes />
-      <div>Future footer</div>
+      <div>Testing footer some text</div>
     </Router>
   );
 }
