@@ -4,7 +4,7 @@ import {pageVariants} from "../styles/variants";
 
 const Home = () => {
     return (
-        <motion.div className={'bg-red-500 text-white'}
+        <motion.div className={''}
                     variants={pageVariants}
                     initial={'initial'}
                     animate={'animate'}

@@ -4,7 +4,7 @@ import {motion} from "framer-motion";
 
 const LeaderBoard = () => {
     return (
-        <motion.div className={'bg-red-500 text-white'}
+        <motion.div className={''}
                     variants={pageVariants}
                     initial={'initial'}
                     animate={'animate'}
