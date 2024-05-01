@@ -33,10 +33,10 @@ const SignUpModal = () => {
           <div className={"flex justify-center items-center gap-5"}>
             <Button
               handler={() => {}}
-              text={"Sign up"}
-              bgColor={"purple"}
-              buttonClassName="hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white"
-            />
+              buttonClassName="hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white bg-purple-300"
+            >
+                Sign up
+            </Button>
             <FcGoogle className={"text-7xl stroke-black stroke-1"} />
           </div>
         </div>

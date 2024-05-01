@@ -28,10 +28,10 @@ const LoginModal = () => {
           <div className={"flex justify-between items-center gap-2"}>
             <Button
               handler={() => {}}
-              text={"Log In"}
-              bgColor={"purple"}
-              buttonClassName="hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white"
-            />
+              buttonClassName="hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white bg-purple-300"
+            >
+                Log in
+            </Button>
             <FcGoogle className={"text-7xl stroke-black stroke-1"} />
             <span className={"text-title-md text-nowrap"}>... or Sign Up</span>
           </div>
