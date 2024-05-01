@@ -13,5 +13,5 @@ function App() {
         </Router>
     );
 }
-gi
+
 export default App;
