@@ -24,6 +24,7 @@ module.exports = {
         neon: "0 0 2px #fff,inset 0 0 2px #fff,0 0 5px #0f8,0 0 15px #0f8,0 0 30px #0f8",
         "neon-inner":
           "inset 0 0 10px #00ff00, inset 0 0 20px #00ff00, inset 0 0 30px #00ff00, inset 0 0 40px #00ff00, inset 0 0 70px #00ff00, inset 0 0 80px #00ff00, inset 0 0 100px #00ff00, inset 0 0 150px #00ff00",
+        buttonHover: "inset 6.5em 0 0 0",
       },
       backgroundColor: {
         cyan: "#7DE2D1",
