@@ -28,6 +28,7 @@ const LoginModal = () => {
           <div className={"flex justify-between items-center gap-2"}>
             <Button
               handler={() => {}}
+
               buttonClassName="hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white bg-purple-300"
             >
                 Log in
