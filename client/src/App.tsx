@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import AnimRoutes from "./components/AnimRoutes";
-import {BrowserRouter as Router} from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 function App() {
     return (
