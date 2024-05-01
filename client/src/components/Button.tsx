@@ -1,36 +1,28 @@
-import React from "react";
-import { IconType } from "react-icons";
+import React, {ReactNode} from "react";
 
 type TButtonProps = {
-  text: string;
   handler: () => void;
-  bgColor?: "purple" | "transparent" | "green";
   buttonClassName?: string;
-  icon?: IconType;
+  children?: ReactNode | ReactNode[];
 };
 
-const bgColorMap = {
-  purple: "bg-purple-300",
-  transparent: "bg-transparent",
-  green: "bg-green-300",
-};
+const colors = {
+  green: 'bg-green-300',
+  red: 'bg-red-300',
+  blue: 'bg-blue-300',
+}
 
 const Button = ({
-  text,
   handler,
-  bgColor = "transparent",
-  icon: Icon,
+  children,
   buttonClassName = "",
 }: TButtonProps) => {
   return (
     <button
-      className={`text-button text-black ${
-        bgColorMap[bgColor] ? bgColorMap[bgColor] : ""
-      } border border-black font-secondary px-8 py-2 flex flex-row gap-5 items-center rounded-sm ${buttonClassName}`}
+      className={`text-button text-black border border-black font-secondary px-8 py-2 flex flex-row gap-5 items-center rounded-sm ${buttonClassName}`}
       onClick={handler}
     >
-      {text}
-      {Icon && <Icon className="text-button" />}
+      {children}
     </button>
   );
 };

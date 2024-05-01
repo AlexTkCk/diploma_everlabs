@@ -5,6 +5,7 @@ import Button from "../components/Button";
 import ai_img from '../assets/ai.svg'
 import racer_img from '../assets/racer.svg'
 import versus_img from '../assets/versus.svg'
+import {FaFlag} from "react-icons/fa";
 
 const Home = () => {
     return (
@@ -19,7 +20,9 @@ const Home = () => {
                     <br/>
                     <span className={'text-paragraph-lg'}>Save your race history, compare and improve your skills</span>
                 </p>
-                <Button handler={() => {}} text={'Create account'} />
+                <Button handler={() => {}}>
+                    Create account
+                </Button>
             </div>
 
             <div className={'relative w-full h-1/3 bg-green-200'}>
@@ -36,7 +39,10 @@ const Home = () => {
                         <img className={'w-1/4 aspect-square'} src={ai_img}/>
                     </div>
                     <span className={'-skew-x-[30deg]'}>
-                        <Button handler={() => {}} text={'Practise'}/>
+                        <Button handler={() => {}}>
+                            Practise
+                            <FaFlag className={'text-button'}/>
+                        </Button>
                     </span>
                 </div>
                 <div className={'skew-x-[30deg] h-full w-1/4 bg-[#339989] flex flex-col items-center justify-evenly py-2 hover:shadow-neon transition duration-200 hover:scale-110'}>
@@ -48,7 +54,10 @@ const Home = () => {
                         <img className={'w-1/4 aspect-square'} src={racer_img}/>
                     </div>
                     <span className={'-skew-x-[30deg]'}>
-                        <Button handler={() => {}} text={'Challenge'}/>
+                        <Button handler={() => {}}>
+                            Challenge
+                            <FaFlag className={'text-button'}/>
+                        </Button>
                     </span>
                 </div>
             </div>
