@@ -1,5 +1,5 @@
 import React from "react";
-import { TThemeColor } from "../types.d";
+import {TThemeColor} from "../types";
 
 const colors = {
   green: "bg-green-500",
@@ -9,13 +9,23 @@ const colors = {
   blue: "bg-blue-500",
 };
 
-interface Theme {
+const shadows = {
+  green: "shadow-green-300",
+  red: "shadow-red-300",
+  yellow: "shadow-yellow-300",
+  black: "shadow-white",
+  blue: "shadow-blue-300",
+};
+
+interface TThemeButtonProps {
   bgColor: TThemeColor;
+  handler: () => void;
+  isActive?: boolean,
 }
 
-const ThemeButton = ({ bgColor }: Theme) => {
+const ThemeButton = ({ bgColor, handler, isActive=false }: TThemeButtonProps) => {
   return (
-    <button className={`${colors[bgColor]} h-10 w-10 rounded-full`}></button>
+    <button onClick={handler} className={`${colors[bgColor]} ${isActive && 'shadow-neon border-white border scale-105'} h-10 w-10 rounded-full`}></button>
   );
 };
 
