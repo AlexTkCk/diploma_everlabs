@@ -5,11 +5,13 @@ import {BrowserRouter as Router} from "react-router-dom";
 function App() {
     return (
         <Router>
-            <div>Future navigation</div>
-            <AnimRoutes/>
-            <div>Future footer</div>
+            <div className={'flex overflow-hidden h-screen w-screen flex-col'}>
+                <div className={'h-20 bg-gray-200'}>Future navigation</div>
+                <AnimRoutes/>
+                <div className={'h-20 bg-gray-200'}>Future footer</div>
+            </div>
         </Router>
     );
 }
-
+gi
 export default App;
