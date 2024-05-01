@@ -9,13 +9,6 @@ const colors = {
   blue: "bg-blue-500",
 };
 
-const shadows = {
-  green: "shadow-green-300",
-  red: "shadow-red-300",
-  yellow: "shadow-yellow-300",
-  black: "shadow-white",
-  blue: "shadow-blue-300",
-};
 
 interface TThemeButtonProps {
   bgColor: TThemeColor;
