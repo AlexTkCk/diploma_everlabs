@@ -7,6 +7,7 @@ import { FaRobot } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import { MdLeaderboard } from "react-icons/md";
 import { BiSolidUserAccount } from "react-icons/bi";
+import ThemeButton from "./components/ThemeButton";
 
 
 
@@ -25,7 +26,16 @@ function App() {
                     </div>
                 </div>
                 <AnimRoutes/>
-                <div className={'h-20 bg-gray-200'}>Future footer</div>
+                <div className={'flex justify-between bg-[#151E17] px-5 py-3 items-center'}>
+                    <p className={'font-secondary text-paragraph-lg text-white'}>© 2024 Pensil Games, Inc</p>
+                    <div className={'rounded-lg border border-white px-3 py-2 flex gap-3'}>
+                        <ThemeButton bgColor={'green'} handler={() => {}} isActive={true}/>
+                        <ThemeButton bgColor={'red'} handler={() => {}} isActive={false}/>
+                        <ThemeButton bgColor={'yellow'} handler={() => {}} isActive={false}/>
+                        <ThemeButton bgColor={'blue'} handler={() => {}} isActive={false}/>
+                        <ThemeButton bgColor={'black'} handler={() => {}} isActive={false}/>
+                    </div>
+                </div>
             </div>
         </Router>
     );
