@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 
 const SignUpModal = () => {
   return (
-    <div className={"fixed w-full h-full grid place-items-center"}>
+    <div className={"fixed top-0 left-0 w-full h-full grid place-items-center"}>
       <div
         className={"absolute top-0 left-0 w-full h-full bg-black opacity-80"}
       ></div>
