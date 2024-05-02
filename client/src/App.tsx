@@ -9,10 +9,6 @@ import { MdLeaderboard } from "react-icons/md";
 import { BiSolidUserAccount } from "react-icons/bi";
 import ThemeButton from "./components/ThemeButton";
 import ThemeProvider from "./context/ThemeContext";
-import ThemeContext from "./context/ThemeContext";
-import Button from "./components/Button";
-
-
 
 function App() {
 
