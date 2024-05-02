@@ -33,6 +33,9 @@ module.exports = {
         primary: ['"Share Tech Mono"'],
         secondary: ['"Anonymous Pro"'],
       },
+      backgroundImage: {
+        account: "url('/src/assets/account_bg.png')",
+      },
     },
   },
 };
