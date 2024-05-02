@@ -8,17 +8,18 @@ type TThemeProvider = {
 
 export const themeContext = createContext<TThemeContext>(
     {
+        themeValue: 'green',
         themeConfig:
         {
             primary: 'bg-green-950',
             secondary: 'bg-green-400',
             accent: 'bg-green-200',
         },
-    setTheme: () => {}});
+        setThemeValue: () => {}});
 
 function ThemeProvider ({children}: TThemeProvider) {
 
-    const [themeValue, setTheme] = useState<TThemeColor>('green');
+    const [themeValue, setThemeValue] = useState<TThemeColor>('green');
     const [themeConfig, setThemeConfig] = useState<TThemeConfig>(themeStyles[themeValue]);
 
     useEffect(() => {
@@ -26,7 +27,7 @@ function ThemeProvider ({children}: TThemeProvider) {
     }, [themeValue])
 
     return (
-        <themeContext.Provider value={{themeConfig, setTheme}}>
+        <themeContext.Provider value={{themeValue, themeConfig, setThemeValue}}>
             {children}
         </themeContext.Provider>
     )
