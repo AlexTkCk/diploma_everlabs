@@ -1,5 +1,3 @@
-const { transform } = require("typescript");
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
@@ -21,9 +19,13 @@ module.exports = {
         button: "2rem", // 32px
       },
       boxShadow: {
-        neon: "0 0 2px #fff,inset 0 0 2px #fff,0 0 5px #0f8,0 0 15px #0f8,0 0 30px #0f8",
-        "neon-inner":
+        'neon-green': "0 0 2px #fff,inset 0 0 2px #fff,0 0 5px #0f8,0 0 15px #0f8,0 0 30px #0f8",
+        'neon-red': '0 0 2px #fff, inset 0 0 2px #fff, 0 0 5px #f00, 0 0 15px #f00, 0 0 30px #f00',
+        'neon-blue': '0 0 2px #fff, inset 0 0 2px #fff, 0 0 5px #00f, 0 0 15px #00f, 0 0 30px #00f',
+        'neon-yellow': '0 0 2px #fff, inset 0 0 2px #fff, 0 0 5px #ff0, 0 0 15px #ff0, 0 0 30px #ff0',
+        'neon-inner':
           "inset 0 0 10px #00ff00, inset 0 0 20px #00ff00, inset 0 0 30px #00ff00, inset 0 0 40px #00ff00, inset 0 0 70px #00ff00, inset 0 0 80px #00ff00, inset 0 0 100px #00ff00, inset 0 0 150px #00ff00",
+
         buttonHover: "inset 6.5em 0 0 0",
       },
       backgroundColor: {
