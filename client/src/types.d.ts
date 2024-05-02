@@ -12,4 +12,6 @@ export type TThemeConfig = {
     primary: string,
     secondary: string,
     accent: string,
+    neon: string,
+    hoverNeon: string,
 }
