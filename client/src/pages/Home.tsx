@@ -1,13 +1,16 @@
 import {motion} from 'framer-motion';
-import React from 'react';
+import React, {useContext} from 'react';
 import {pageVariants} from "../styles/variants";
 import Button from "../components/Button";
 import ai_img from '../assets/ai.svg'
 import racer_img from '../assets/racer.svg'
 import versus_img from '../assets/versus.svg'
 import {FaFlag} from "react-icons/fa";
+import {themeContext} from "../context/ThemeContext";
+
 
 const Home = () => {
+    const {themeConfig} = useContext(themeContext);
     return (
         <motion.div className={'grow overflow-y-hidden flex flex-col'}
                     variants={pageVariants}
@@ -30,7 +33,7 @@ const Home = () => {
             </div>
 
             <div className={'py-5 grow flex justify-center gap-10'}>
-                <div className={'skew-x-[30deg] h-full w-1/4 bg-[#339989] flex flex-col items-center justify-evenly py-2 hover:shadow-neon transition duration-200 hover:scale-110'}>
+                <div className={`skew-x-[30deg] h-full w-1/4 ${themeConfig.secondary} flex flex-col items-center justify-evenly py-2 ${themeConfig.hoverNeon} transition duration-200 hover:scale-110`}>
                     <h1 className={'-skew-x-[30deg] font-primary text-title-lg w-full px-10'}>Typing Test</h1>
                     <p className={'-skew-x-[30deg] font-secondary text-paragraph-lg w-full px-16'}>Improve your typing skills on your own</p>
                     <div className={'-skew-x-[30deg] flex gap-5 px-16'}>
@@ -45,7 +48,7 @@ const Home = () => {
                         </Button>
                     </span>
                 </div>
-                <div className={'skew-x-[30deg] h-full w-1/4 bg-[#339989] flex flex-col items-center justify-evenly py-2 hover:shadow-neon transition duration-200 hover:scale-110'}>
+                <div className={`skew-x-[30deg] h-full w-1/4 ${themeConfig.secondary} flex flex-col items-center justify-evenly py-2 ${themeConfig.hoverNeon} transition duration-200 hover:scale-110`}>
                     <h1 className={'-skew-x-[30deg] font-primary text-title-md w-full px-10'}>Race your friends</h1>
                     <p className={'-skew-x-[30deg] font-secondary text-paragraph-lg w-full px-16'}>Create your own racetrack and play with friends</p>
                     <div className={'-skew-x-[30deg] flex gap-5 px-16'}>

@@ -1,9 +1,13 @@
-import React from "react";
+import React, {useContext} from "react";
 import Input from "./Input";
 import Button from "./Button";
 import { FcGoogle } from "react-icons/fc";
+import {themeContext} from "../context/ThemeContext";
 
 const LoginModal = () => {
+
+    const {themeConfig} = useContext(themeContext);
+
   return (
     <div className={"fixed top-0 left-0 w-full h-full grid place-items-center"}>
       <div
@@ -11,7 +15,7 @@ const LoginModal = () => {
       ></div>
       <div
         className={
-          "w-fit -skew-x-12 shadow-neon bg-green-400 py-5 border border-white border-2 px-5"
+          `w-fit -skew-x-12 ${themeConfig.neon} ${themeConfig.secondary} py-5 border-2 px-5`
         }
       >
         <div className={"mx-auto flex flex-col gap-10"}>
