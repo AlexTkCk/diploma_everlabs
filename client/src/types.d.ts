@@ -3,8 +3,9 @@ import {Dispatch, SetStateAction} from "react";
 export type TThemeColor = 'green' | 'red' | 'blue' | 'yellow' | 'black';
 
 export type TThemeContext = {
+    themeValue: TThemeColor;
     themeConfig: TThemeConfig;
-    setTheme: Dispatch<SetStateAction<TThemeColor>>;
+    setThemeValue: Dispatch<SetStateAction<TThemeColor>>;
 }
 
 export type TThemeConfig = {
