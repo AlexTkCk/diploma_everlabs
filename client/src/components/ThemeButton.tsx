@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useContext} from "react";
 import {TThemeColor} from "../types";
+import {themeContext} from "../context/ThemeContext";
 
 const colors = {
   green: "bg-green-500",
@@ -9,16 +10,21 @@ const colors = {
   blue: "bg-blue-500",
 };
 
-
-interface TThemeButtonProps {
-  bgColor: TThemeColor;
-  handler: () => void;
-  isActive?: boolean,
+const neonStyles = {
+  green: "shadow-neon-green",
+  red: "shadow-neon-red",
+  yellow: "shadow-neon-yellow",
+  blue: "shadow-neon-blue",
+  black: "",
 }
 
-const ThemeButton = ({ bgColor, handler, isActive=false }: TThemeButtonProps) => {
+
+const ThemeButton = ({ bgColor }: {bgColor: TThemeColor}) => {
+
+  const {themeValue, setThemeValue} = useContext(themeContext);
+
   return (
-    <button onClick={handler} className={`${colors[bgColor]} ${isActive && 'shadow-neon border-white border scale-105'} h-10 w-10 rounded-full`}></button>
+    <button onClick={() => setThemeValue(bgColor)} className={`${colors[bgColor]} ${themeValue === bgColor && neonStyles[themeValue] + ' border-white border scale-110'} h-10 w-10 rounded-full`}></button>
   );
 };
 
