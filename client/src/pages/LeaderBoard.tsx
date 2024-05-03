@@ -17,20 +17,23 @@ const LeaderBoard = () => {
         type="search"
         className="w-1/4 p-2 mx-auto mb-5 border-2 border-black rounded-2xl"
       />
-      <div className="flex flex-row gap-10 w-full h-[90%] font-secondary">
-        <div className="w-3/4 h-full border-2 border-black rounded-2xl py-5 px-2 overflow-y-scroll">
+      <div className="flex flex-row gap-10 w-full grow font-secondary min-h-0">
+        <div className="w-3/4 h-full border-2 border-black flex flex-col rounded-2xl py-5 px-2">
           <div className="flex flex-row justify-around pb-2 text-xl font-bold">
             <span className="w-1/3 text-center ">Name</span>
             <span className="w-1/3 text-center">Speed</span>
             <span className="w-1/3 text-center">Time</span>
           </div>
-          <hr className="border-black pb-5" />
-          <div className="h-[1000px] flex flex-col gap-5">
-            <Row name={"Player 1"} speed={"123"} time={"123"} />
-            <Row name={"Player 1"} speed={"123"} time={"123"} />
-            <Row name={"Player 1"} speed={"123"} time={"123"} />
-            <Row name={"Player 1"} speed={"123"} time={"123"} />
-            <Row name={"Player 1"} speed={"123"} time={"123"} />
+          <hr className="border-black" />
+          <div className={"grow overflow-y-scroll"}>
+            <div className={"h-[3000px] flex flex-col gap-5"}>
+              <hr className="border-black" />
+              <Row name={"Player 1"} speed={"123"} time={"123"} />
+              <Row name={"Player 1"} speed={"123"} time={"123"} />
+              <Row name={"Player 1"} speed={"123"} time={"123"} />
+              <Row name={"Player 1"} speed={"123"} time={"123"} />
+              <Row name={"Player 1"} speed={"123"} time={"123"} />
+            </div>
           </div>
         </div>
 
