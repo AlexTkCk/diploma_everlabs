@@ -24,7 +24,7 @@ const Account = () => {
       animate={"animate"}
       exit={"exit"}
     >
-      <div className="relative h-full w-3/4 flex flex-col gap-10 border-2 border-slate-900 p-10 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat">
+      <div className="relative h-full w-3/4 flex flex-col gap-8 border-2 border-slate-900 p-8 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat">
         <h2 className="text-5xl">Driver Licence</h2>
         <div className="h-full flex flex-row gap-10">
           <img
@@ -50,11 +50,11 @@ const Account = () => {
               <span className="font-bold">Place in the ranking table:</span>{" "}
               {data.placeInRanking}
             </p>
-            <p className="text-justify w-3/4 overflow-y-scroll">
+            <p className="text-justify w-3/4 overflow-y-scroll scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-300">
               <span className="font-bold">About me:</span> {data.about}
             </p>
           </div>
-          <p className="absolute bottom-3 right-3 text-center text-md font-bold">
+          <p className="absolute bottom-3 right-3 text-center text-md font-bold ">
             Started playing: <br /> {data.startedPlaying}
           </p>
           <Button
