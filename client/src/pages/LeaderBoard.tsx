@@ -2,6 +2,7 @@ import React from "react";
 import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
 import Row from "../components/Row";
+import Checkbox from "../components/CheckBox";
 
 const LeaderBoard = () => {
   return (
@@ -44,18 +45,9 @@ const LeaderBoard = () => {
         <div className="w-1/4 h-full border-2 border-black rounded-2xl py-5 px-2 font-primary flex flex-col gap-3 items-center">
           <span className="text-center text-3xl">Filter</span>
           <hr className="border-black w-full" />
-          <div className="flex gap-5 text-2xl">
-            <label htmlFor="rt">Race type</label>
-            <input type="checkbox" id="rt" />
-          </div>
-          <div className="flex gap-5 text-2xl">
-            <label htmlFor="ms">My scores</label>
-            <input type="checkbox" id="ms" />
-          </div>
-          <div className="flex gap-5 text-2xl">
-            <label htmlFor="comp">Competitions</label>
-            <input type="checkbox" id="comp" />
-          </div>
+          <Checkbox value="Race type" id="rt" />
+          <Checkbox value="My scores" id="ms" />
+          <Checkbox value="Competition" id="comp" />
         </div>
       </div>
     </motion.div>
