@@ -25,7 +25,11 @@ const LeaderBoard = () => {
             <span className="w-1/3 text-center">Time</span>
           </div>
           <hr className="border-black" />
-          <div className={"grow overflow-y-scroll"}>
+          <div
+            className={
+              "grow overflow-y-scroll scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-100"
+            }
+          >
             <div className={"h-[3000px] flex flex-col gap-5"}>
               <hr className="border-black" />
               <Row name={"Player 1"} speed={"123"} time={"123"} />
