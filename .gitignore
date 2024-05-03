@@ -1,1 +1,7 @@
 .idea
+
+server/myapp/db/*.sqlite3-shm
+server/myapp/db/*.sqlite3-wal
+server/myapp/db/*.sqlite3
+
+
