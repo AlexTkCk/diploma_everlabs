@@ -1,9 +1,15 @@
 class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:signup, :login]
+
   def signup
     data = JSON.parse(request.body.read)
     login = data['login']
     password = data['password']
+
+    if login.blank? || !valid_email?(login)
+      render json: { error: 'Invalid email format' }, status: :unprocessable_entity
+      return
+    end
 
     existing_user = User.find_by(login: login)
 
@@ -15,8 +21,8 @@ class UsersController < ApplicationController
       if new_user.save
         render json: { message: 'User created successfully' }
       else
-        if new_user.errors[:login].include?("has already been taken")
-          render json: { error: 'Login has already been taken' }, status: :unprocessable_entity
+        if new_user.errors[:password].include?("is invalid")
+          render json: { error: 'Password does not meet requirements' }, status: :unprocessable_entity
         else
           render json: { error: 'Failed to create user' }, status: :unprocessable_entity
         end
@@ -37,7 +43,8 @@ class UsersController < ApplicationController
     user = User.find_by(login: login)
 
     if user && user.authenticate(password)
-      render json: { message: 'Login successful' }
+      token = generate_token(user.id)
+      render json: { message: 'Login successful', token: token }
     elsif user
       render json: { error: 'Invalid password' }, status: :unprocessable_entity
     else
@@ -45,7 +52,9 @@ class UsersController < ApplicationController
     end
   end
 
-
+  def logout
+    render json: { message: 'Login not found. Would you like to register?' }, status: :not_found
+  end
 
   private
 
@@ -60,4 +69,15 @@ class UsersController < ApplicationController
       pbsymbols: data['pbsymbols']
     }
   end
+
+  def valid_email?(email)
+    email =~ URI::MailTo::EMAIL_REGEXP
+  end
+
+  def generate_token(user_id)
+    expiration_time = Time.now.to_i + 3600 # Например, срок действия 1 час (3600 секунд)
+    payload = { user_id: user_id, exp: expiration_time }
+    JWT.encode(payload, Rails.application.secrets.secret_key_base)
+  end
+
 end

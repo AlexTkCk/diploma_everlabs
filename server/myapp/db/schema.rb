@@ -10,15 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 0) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_02_223931) do
   create_table "users", force: :cascade do |t|
     t.text "login"
-    t.text "password"
+    t.text "password_digest"
     t.text "nickname"
     t.text "img_url"
     t.integer "count_race"
     t.integer "pbtime"
     t.integer "pbsymbols"
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
+    t.boolean "email_auto"
   end
 
 end
