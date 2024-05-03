@@ -24,7 +24,7 @@ const Account = () => {
       animate={"animate"}
       exit={"exit"}
     >
-      <div className="relative h-[95%] w-3/4 flex flex-col gap-10 border-2 border-slate-900 p-10 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat">
+      <div className="relative h-full w-3/4 flex flex-col gap-10 border-2 border-slate-900 p-10 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat">
         <h2 className="text-5xl">Driver Licence</h2>
         <div className="h-full flex flex-row gap-10">
           <img
