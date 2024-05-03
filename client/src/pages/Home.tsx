@@ -10,7 +10,7 @@ import {themeContext} from "../context/ThemeContext";
 
 
 const Home = () => {
-    const {themeConfig} = useContext(themeContext);
+    const {themeValue, themeConfig} = useContext(themeContext);
     return (
         <motion.div className={'grow overflow-y-hidden flex flex-col'}
                     variants={pageVariants}
@@ -37,9 +37,9 @@ const Home = () => {
                     <h1 className={'-skew-x-[30deg] font-primary text-title-lg w-full px-10'}>Typing Test</h1>
                     <p className={'-skew-x-[30deg] font-secondary text-paragraph-lg w-full px-16'}>Improve your typing skills on your own</p>
                     <div className={'-skew-x-[30deg] flex gap-5 px-16'}>
-                        <img className={'w-1/4 aspect-square '} src={racer_img}/>
-                        <img className={'w-1/4 aspect-square'} src={versus_img}/>
-                        <img className={'w-1/4 aspect-square'} src={ai_img}/>
+                        <img className={`w-1/4 aspect-square`} src={racer_img}/>
+                        <img className={`w-1/4 aspect-square`} src={versus_img}/>
+                        <img className={`w-1/4 aspect-square`} src={ai_img}/>
                     </div>
                     <span className={'-skew-x-[30deg]'}>
                         <Button handler={() => {}}>
@@ -57,7 +57,7 @@ const Home = () => {
                         <img className={'w-1/4 aspect-square'} src={racer_img}/>
                     </div>
                     <span className={'-skew-x-[30deg]'}>
-                        <Button handler={() => {}}>
+                        <Button handler={() => {}} buttonClassName={(themeValue === 'black' ? 'border-white text-white hover:bg-white hover:text-black' : 'border-black hover:bg-white') + ' transition-colors duration-300'}>
                             Challenge
                             <FaFlag className={'text-button'}/>
                         </Button>
