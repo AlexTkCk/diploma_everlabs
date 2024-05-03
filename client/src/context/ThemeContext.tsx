@@ -9,14 +9,7 @@ type TThemeProvider = {
 export const themeContext = createContext<TThemeContext>(
     {
         themeValue: 'green',
-        themeConfig:
-        {
-            primary: 'bg-green-950',
-            secondary: 'bg-green-400',
-            accent: 'bg-green-200',
-            neon: 'shadow-neon-green',
-            hoverNeon: 'hover:shadow-neon-green',
-        },
+        themeConfig: themeStyles.green,
         setThemeValue: () => {}});
 
 function ThemeProvider ({children}: TThemeProvider) {
