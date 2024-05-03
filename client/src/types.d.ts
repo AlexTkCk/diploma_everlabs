@@ -14,4 +14,5 @@ export type TThemeConfig = {
     accent: string,
     neon: string,
     hoverNeon: string,
+    info: string,
 }
