@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:signup, :login]
 
+  def google_test
+  end
   def signup
     data = JSON.parse(request.body.read)
     login = data['login']
