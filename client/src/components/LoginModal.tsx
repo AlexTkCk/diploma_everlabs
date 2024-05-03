@@ -15,7 +15,7 @@ const LoginModal = () => {
       ></div>
       <div
         className={
-          `w-fit -skew-x-12 ${themeConfig.neon} ${themeConfig.secondary} py-5 border-2 px-5`
+          `w-fit -skew-x-12 ${themeConfig.neon} ${themeConfig.info} py-5 border-2 px-5`
         }
       >
         <div className={"mx-auto flex flex-col gap-10"}>
