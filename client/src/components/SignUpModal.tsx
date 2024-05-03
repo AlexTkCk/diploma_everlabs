@@ -15,7 +15,7 @@ const SignUpModal = () => {
       ></div>
       <div
         className={
-          `w-1/3 -skew-x-12 ${themeConfig.neon} ${themeConfig.secondary} py-5 px-5`
+          `w-1/3 -skew-x-12 ${themeConfig.neon} ${themeConfig.info} py-5 px-5`
         }
       >
         <div className={"mx-auto flex flex-col gap-10"}>
