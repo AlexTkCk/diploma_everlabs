@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import ai_img from '../assets/ai.svg'
 import racer_img from '../assets/racer.svg'
 import versus_img from '../assets/versus.svg'
-import {FaFlag} from "react-icons/fa";
+import {FaFlagCheckered} from "react-icons/fa";
 import {themeContext} from "../context/ThemeContext";
 
 
@@ -44,7 +44,7 @@ const Home = () => {
                     <span className={'-skew-x-[30deg]'}>
                         <Button handler={() => {}} buttonClassName={(themeValue === 'black' ? 'border-white text-white hover:bg-white hover:text-black' : 'border-black hover:bg-white') + ' transition-colors duration-250'}>
                             Practise
-                            <FaFlag className={'text-button'}/>
+                            <FaFlagCheckered className={'text-button'}/>
                         </Button>
                     </span>
                 </div>
@@ -59,7 +59,10 @@ const Home = () => {
                     <span className={'-skew-x-[30deg]'}>
                         <Button handler={() => {}} buttonClassName={(themeValue === 'black' ? 'border-white text-white hover:bg-white hover:text-black' : 'border-black hover:bg-white') + ' transition-colors duration-250'}>
                             Challenge
-                            <FaFlag className={'text-button'}/>
+                            <div className={'flex justify-center items-center'}>
+                                <FaFlagCheckered className={'scale-x-[-1] -rotate-45 text-button'}/>
+                                <FaFlagCheckered className={'text-button rotate-45'}/>
+                            </div>
                         </Button>
                     </span>
                 </div>
