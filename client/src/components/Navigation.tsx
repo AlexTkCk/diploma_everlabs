@@ -18,7 +18,7 @@ const Navigation = () => {
             <div className={'flex gap-3 ml-auto px-10 w-fit'}>
                 <CustomLink link={'/'} text={'Single player'} icon={FaRobot}/>
                 <CustomLink link={'/'} text={'Multiplayer'} icon={FaUsers}/>
-                <CustomLink link={'/'} text={'Leaderboard'} icon={MdLeaderboard}/>
+                <CustomLink link={'/leaderboard'} text={'Leaderboard'} icon={MdLeaderboard}/>
                 <CustomLink link={'/account'} text={'Account'} icon={BiSolidUserAccount}/>
             </div>
         </div>
