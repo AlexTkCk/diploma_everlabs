@@ -3,6 +3,7 @@ import React from "react";
 type TCheckbox = {
   value: string;
   id: string;
+  onChange?: (e: any) => void;
 };
 const Checkbox: React.FC<TCheckbox> = ({ value, id }) => {
   return (
