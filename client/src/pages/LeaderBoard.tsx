@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
 import Row from "../components/Row";
 import Checkbox from "../components/CheckBox";
+import dataLB from "../data/leaderboardData.json";
 
 const LeaderBoard = () => {
+  const [data, setData] = useState(dataLB);
+  const [searchData, setSearchData] = useState("");
+
+  const handleSearch = (e: any) => {
+    setSearchData(e.target.value);
+  };
+
+  const filteredData = data.filter((player) =>
+    player.name.toLowerCase().includes(searchData.toLowerCase())
+  );
+
   return (
     <motion.div
       className={"grow overflow-y-hidden flex flex-col px-5 py-3"}
@@ -15,7 +27,8 @@ const LeaderBoard = () => {
     >
       <input
         placeholder="Find a player"
-        type="search"
+        type="text"
+        onChange={handleSearch}
         className="w-1/4 p-2 mx-auto mb-5 border-2 border-black rounded-2xl"
       />
       <div className="flex flex-row gap-10 w-full grow font-secondary min-h-0">
@@ -33,11 +46,14 @@ const LeaderBoard = () => {
           >
             <div className={"h-[3000px] flex flex-col gap-5"}>
               <hr className="border-black" />
-              <Row name={"Player 1"} speed={"123"} time={"123"} />
-              <Row name={"Player 1"} speed={"123"} time={"123"} />
-              <Row name={"Player 1"} speed={"123"} time={"123"} />
-              <Row name={"Player 1"} speed={"123"} time={"123"} />
-              <Row name={"Player 1"} speed={"123"} time={"123"} />
+              {/* {data.length ? (
+                data.map((dataLB) => <Row key={dataLB.id} dataLB={dataLB} />)
+              ) : (
+                <p>No data</p>
+              )} */}
+              {filteredData.map((player) => (
+                <Row key={player.id} dataLB={player} />
+              ))}
             </div>
           </div>
         </div>
