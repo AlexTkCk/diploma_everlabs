@@ -15,6 +15,9 @@ type TData = {
 const LeaderBoard = () => {
   const [data, setData] = useState<TData[]>(dataLB);
   const [searchData, setSearchData] = useState("");
+  const [sortBySpeed, setSortBySpeed] = useState(false);
+  const [sortByTime, setSortByTime] = useState(false);
+  const [initialData, setInitialData] = useState<TData[]>([]);
 
   const handleSearch = (e: any) => {
     setSearchData(e.target.value);
@@ -25,18 +28,28 @@ const LeaderBoard = () => {
   );
 
   const handleSort = (sortBy: string) => {
-    const newData = [...data];
+    let newData = [...data];
+
     if (sortBy === "speed") {
-      newData.sort((a, b) => b.speed - a.speed);
+      newData = sortBySpeed
+        ? newData.sort((a, b) => a.speed - b.speed)
+        : newData.sort((a, b) => b.speed - a.speed);
+      setSortBySpeed(!sortBySpeed);
+      setSortByTime(false);
     } else if (sortBy === "time") {
-      newData.sort((a, b) => a.time - b.time);
+      newData = sortByTime
+        ? newData.sort((a, b) => b.time - a.time)
+        : newData.sort((a, b) => a.time - b.time);
+      setSortByTime(!sortByTime);
+      setSortBySpeed(false);
     }
     setData(newData);
   };
 
   useEffect(() => {
+    setInitialData(dataLB);
     setData(dataLB);
-  }, [dataLB]);
+  }, []);
 
   return (
     <motion.div
@@ -78,15 +91,22 @@ const LeaderBoard = () => {
           </div>
         </div>
 
-        <div className="w-1/4 h-full border-2 border-black rounded-2xl py-5 px-2 font-primary flex flex-col gap-3 items-center">
+        <div className="relative w-1/4 h-full border-2 border-black rounded-2xl py-5 px-2 font-primary flex flex-col gap-3 items-center">
           <span className="text-center text-3xl">Sort</span>
           <hr className="border-black w-full" />
+
           <Checkbox
-            value="Speed"
-            id="rt"
+            value="by speed"
+            id="speed"
+            isChecked={sortBySpeed}
             onChange={() => handleSort("speed")}
           />
-          <Checkbox value="Time" id="ms" onChange={() => handleSort("time")} />
+          <Checkbox
+            value="by time"
+            id="time"
+            isChecked={sortByTime}
+            onChange={() => handleSort("time")}
+          />
         </div>
       </div>
     </motion.div>
