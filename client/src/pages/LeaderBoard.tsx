@@ -61,9 +61,8 @@ const LeaderBoard = () => {
         <div className="w-1/4 h-full border-2 border-black rounded-2xl py-5 px-2 font-primary flex flex-col gap-3 items-center">
           <span className="text-center text-3xl">Filter</span>
           <hr className="border-black w-full" />
-          <Checkbox value="Race type" id="rt" />
-          <Checkbox value="My scores" id="ms" />
-          <Checkbox value="Competition" id="comp" />
+          <Checkbox value="Speed" id="rt" />
+          <Checkbox value="Time" id="ms" />
         </div>
       </div>
     </motion.div>
