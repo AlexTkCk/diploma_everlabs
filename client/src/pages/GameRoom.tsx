@@ -79,14 +79,16 @@ const GameRoom = () => {
     useEffect(() => {
         if (containerRef.current) {
             const container = containerRef.current;
-            const child = Array.from(container.children)[caret];
+            const child = Array.from(container.children).find(child => child.classList.contains('caret_here'));
             if (child) {
-                if (caret > charsInARow && caret % charsInARow === 0) {
-                    child.scrollIntoView({behavior: 'smooth'})
+                const {left, height} = child.getBoundingClientRect();
+                if (caret > charsInARow && Math.round(container.getBoundingClientRect().left) === Math.round(left)) {
+                    container.style.bottom = (parseInt(container.style.bottom) + height) + 'px';
                 }
             }
+
         }
-    })
+    }, [caret])
 
     useEffect(() => {
         const socket = new WebSocket('ws://localhost:8080');
@@ -177,7 +179,7 @@ const GameRoom = () => {
                         })
                     }}
                     className={'absolute opacity-0 w-0 h-0'}></textarea>
-                <div ref={containerRef} className={'text-3xl text-justify font-primary relative text-wrap overflow-y-scroll'}>
+                <div ref={containerRef} style={{bottom: 0}} className={'text-3xl transition-all duration-250 ease-linear absolute w-full h-full bottom-0 left-0 text-justify font-primary relative text-wrap'}>
                     {text.map(({value, state}, index) => <span key={index} className={`${charStateMap[state]} ${index === caret ? 'border-l border-white caret_here' : ''} transition duration-250 ease-linear`}>{value}</span>)}
                 </div>
             </div>
