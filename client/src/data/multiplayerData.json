@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "Tyler Beatty DVM",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": false
+  },
+  {
+    "id": 2,
+    "name": "Vernon Feil",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": true
+  },
+  {
+    "id": 3,
+    "name": "Mrs. Tonya Corwin",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": false
+  },
+  {
+    "id": 4,
+    "name": "Arthur Kessler",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": false
+  },
+  {
+    "id": 5,
+    "name": "Jean Feeney III",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": true
+  },
+  {
+    "id": 6,
+    "name": "Josh Cremin",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": false
+  },
+  {
+    "id": 7,
+    "name": "Alvin O'Conner DVM",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": true
+  },
+  {
+    "id": 8,
+    "name": "Dixie Schaefer",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": false
+  },
+  {
+    "id": 9,
+    "name": "Preston Kemmer",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": false
+  },
+  {
+    "id": 10,
+    "name": "Dr. Gabriel Borer",
+    "players": { "amount": 0, "totalAmount": 2 },
+    "password": false
+  }
+]
