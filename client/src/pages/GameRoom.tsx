@@ -45,7 +45,14 @@ const GameRoom = () => {
     }
 
     useEffect(() => {
-        setInterval(() => {setTimer(prev => prev - 1 < 0 ? 0 : prev - 1)}, 1000);
+        const interval = setInterval((() => {
+            let innerTimer = 30;
+            return () => {
+                setTimer(prev => prev - 1 < 0 ? 0 : prev - 1);
+                innerTimer--;
+                if (innerTimer === 0) clearInterval(interval);
+            }
+        })(), 1000);
 
         if (containerRef.current) {
             const {width: containerWidth} = containerRef.current.getBoundingClientRect();
