@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
 import Checkbox from "../components/CheckBox";
@@ -10,8 +10,19 @@ const GameRoom = () => {
   const [searchData, setSearchData] = useState("");
   const [sortBySpeed, setSortBySpeed] = useState(false);
   const [sortByTime, setSortByTime] = useState(false);
-  const [initialData, setInitialData] = useState();
+  const [initialData, setInitialData] = useState(dataMp);
 
+  const handleSearch = (e: any) => {
+    setSearchData(e.target.value);
+  };
+  const filteredData = data.filter((room) =>
+    room.name.toLowerCase().includes(searchData.toLowerCase())
+  );
+
+  useEffect(() => {
+    setInitialData(dataMp);
+    setData(dataMp);
+  }, []);
   return (
     <motion.div
       className={"grow overflow-y-hidden flex flex-col px-5 py-3"}
@@ -20,6 +31,13 @@ const GameRoom = () => {
       animate={"animate"}
       exit={"exit"}
     >
+      <input
+        placeholder="Find a room"
+        type="text"
+        onChange={handleSearch}
+        className="w-1/4 p-2 mx-auto mb-5 border-2 border-black rounded-2xl"
+      />
+
       <div className="flex flex-row gap-10 w-full grow font-secondary min-h-0">
         <div className="w-3/4 h-full border-2 border-black flex flex-col rounded-2xl py-5 px-2">
           <div className="flex flex-row justify-around pb-2 text-xl font-bold">
@@ -37,10 +55,12 @@ const GameRoom = () => {
           >
             <div className={"h-[3000px] flex flex-col gap-5"}>
               <hr className="border-black" />
-              {dataMp.length ? (
-                data.map((dataMp) => <RowMp key={dataMp.id} dataMp={dataMp} />)
+              {filteredData.length ? (
+                filteredData.map((room) => (
+                  <RowMp key={room.id} dataMp={room} />
+                ))
               ) : (
-                <p>Rooms not found</p>
+                <p className="mx-auto text-2xl">Rooms not found</p>
               )}
             </div>
           </div>
