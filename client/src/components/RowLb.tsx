@@ -1,6 +1,6 @@
 import React from "react";
 
-type TRow = {
+type TRowLb = {
   dataLB: {
     id: number;
     name: string;
@@ -9,7 +9,7 @@ type TRow = {
   };
 };
 
-const Row: React.FC<TRow> = ({ dataLB }) => {
+const RowLb: React.FC<TRowLb> = ({ dataLB }) => {
   return (
     <div className="flex flex-row justify-around text-center">
       <span className="w-1/3">{dataLB.name}</span>
@@ -19,4 +19,4 @@ const Row: React.FC<TRow> = ({ dataLB }) => {
   );
 };
 
-export default Row;
+export default RowLb;
