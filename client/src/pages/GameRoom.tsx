@@ -3,7 +3,6 @@ import {pageVariants} from "../styles/variants";
 import {motion} from "framer-motion";
 import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
 import {FaFlag} from "react-icons/fa";
-import useFPS from "../hooks/useFPS";
 import { FaCarSide } from "react-icons/fa";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
@@ -26,6 +25,8 @@ const GameRoom = () => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const roadRef = useRef<HTMLDivElement>(null);
     const enemyRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+
     const [fromLeft, setFromLeft] = useState(0);
     const [enemyFromLeft, setEnemyFromLeft] = useState(0);
     const [ws, setWs] = useState<WebSocket | null>(null);
@@ -34,22 +35,47 @@ const GameRoom = () => {
 
     const [playerSpeed, setPlayerSpeed] = useState(0);
     const [enemySpeed, setEnemySpeed] = useState(0);
-    const FPS = useFPS();
+
+    const [charsInARow, setCharsInARow] = useState(0);
 
     const sendMessage = (symbol: string, trueSymbol: string): void => {
         if (ws) ws.send(JSON.stringify({sym: symbol, trueSym: trueSymbol}))
     }
 
     useEffect(() => {
+        if (containerRef.current) {
+            const {width: containerWidth} = containerRef.current.getBoundingClientRect();
+            const child = Array.from(containerRef.current.children)[0];
+            const {width: childWidth} = child.getBoundingClientRect();
+            setCharsInARow(Math.round(containerWidth / childWidth))
+        }
+    }, [])
+
+    useEffect(() => {
         if (roadRef.current) {
             setFromLeft(prev => prev + playerSpeed)
             roadRef.current.style.marginLeft = '-' + fromLeft + 'px';
         }
+    }, [playerSpeed]);
+
+    useEffect(() => {
         if (enemyRef.current) {
             setEnemyFromLeft(prev => prev + enemySpeed - playerSpeed);
             enemyRef.current.style.marginLeft = enemyFromLeft + 'px';
         }
-    }, [FPS])
+    }, [enemySpeed, playerSpeed]);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            const container = containerRef.current;
+            const child = Array.from(container.children)[caret];
+            if (child) {
+                if (caret > charsInARow && caret % charsInARow === 0) {
+                    child.scrollIntoView({behavior: 'smooth'})
+                }
+            }
+        }
+    })
 
     useEffect(() => {
         const socket = new WebSocket('ws://localhost:8080');
@@ -121,9 +147,9 @@ const GameRoom = () => {
                 <textarea
                     ref={textAreaRef}
                     onKeyDown={e => {
-
                         const key = e.key;
                         if (!alphabet.includes(key)) return;
+                        setCaret(prev => prev + 1);
                         setText(prev => {
                             return prev.map((symbol, index) => {
                                 if (index === caret) {
@@ -138,11 +164,10 @@ const GameRoom = () => {
                                 }
                             })
                         })
-                        setCaret(prev => prev + 1);
                     }}
                     className={'absolute opacity-0 w-0 h-0'}></textarea>
-                <div className={'text-3xl text-justify font-primary relative text-wrap'}>
-                    {text.map(({value, state}, index) => <span className={`${charStateMap[state]} ${index === caret ? 'border-l border-white' : ''} transition duration-250 ease-linear`}>{value}</span>)}
+                <div ref={containerRef} className={'text-3xl text-justify font-primary relative text-wrap overflow-y-scroll'}>
+                    {text.map(({value, state}, index) => <span key={index} className={`${charStateMap[state]} ${index === caret ? 'border-l border-white caret_here' : ''} transition duration-250 ease-linear`}>{value}</span>)}
                 </div>
             </div>
             <button className={'mx-auto mb-10 grid place-items-center bg-red-600 rounded-xl w-1/5 py-5 border border-black'}><FaFlag className={'text-white text-5xl text-center'}/></button>
