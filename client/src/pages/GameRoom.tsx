@@ -38,11 +38,15 @@ const GameRoom = () => {
 
     const [charsInARow, setCharsInARow] = useState(0);
 
+    const [timer, setTimer] = useState(30);
+
     const sendMessage = (symbol: string, trueSymbol: string): void => {
         if (ws) ws.send(JSON.stringify({sym: symbol, trueSym: trueSymbol}))
     }
 
     useEffect(() => {
+        setInterval(() => {setTimer(prev => prev - 1 < 0 ? 0 : prev - 1)}, 1000);
+
         if (containerRef.current) {
             const {width: containerWidth} = containerRef.current.getBoundingClientRect();
             const child = Array.from(containerRef.current.children)[0];
@@ -134,7 +138,7 @@ const GameRoom = () => {
                     <h1 className={'font-primary text-5xl'}>Racer num 1</h1>
                 </div>
                 <div className={'rounded-full h-full aspect-square border border-black grid place-items-center px-5'}>
-                    <h1 className={'text-5xl font-primary'}>30</h1>
+                    <h1 className={'text-5xl font-primary'}>{timer}</h1>
                 </div>
                 <div className={'flex flex-row-reverse gap-2 px-2 py-2 border border-black items-center'}>
                     <Helmet className={'text-black text-5xl'}/>
