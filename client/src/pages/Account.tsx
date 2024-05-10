@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
 import user_avatar from "../assets/user_avatar.jpeg";
 import Button from "../components/Button";
+import EditModal from "../components/EditModal";
+import { themeContext } from "../context/ThemeContext";
 
 const Account = () => {
-  const data = {
+  const { themeConfig } = useContext(themeContext);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [data, setData] = useState({
     name: "John Doe",
     numberOfRaces: "10",
     bestTime: "1:23:45",
@@ -13,7 +17,32 @@ const Account = () => {
     about:
       "Integer malesuada libero a pellentesque viverra. Phasellus ac orci eget dolor tempor facilisis. Proin rhoncus dapibus diam a maximus. Phasellus nulla diam, commodo nec finibus sed, elementum vitae quam. Curabitur non blandit massa. Pellentesque ac tristique justo.",
     startedPlaying: "02.05.2024",
+    profileImg: user_avatar,
+  });
+
+  const openEditModal = () => {
+    setIsEditModalOpen(true);
   };
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+  };
+
+  const handleSave = (
+    newName: string,
+    newAbout: string,
+    newProfileImg: File | null
+  ) => {
+    setData({
+      ...data,
+      name: newName,
+      about: newAbout,
+      profileImg: newProfileImg
+        ? URL.createObjectURL(newProfileImg)
+        : data.profileImg,
+    });
+    closeEditModal();
+  };
+
   return (
     <motion.div
       className={
@@ -29,7 +58,7 @@ const Account = () => {
         <div className="h-full flex flex-row gap-10">
           <img
             className="h-[80%] rounded-md border-2 border-slate-900"
-            src={user_avatar}
+            src={data.profileImg}
             alt="user_avatar"
           />
           <div className="flex flex-col gap-5 font-primary text-xl">
@@ -58,13 +87,18 @@ const Account = () => {
             Started playing: <br /> {data.startedPlaying}
           </p>
           <Button
-            buttonClassName="absolute top-5 right-5 bg-slate-200"
-            handler={() => {}}
+            buttonClassName={`absolute top-5 right-5 bg-slate-200 hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
+            handler={openEditModal}
           >
             Edit
           </Button>
         </div>
       </div>
+      <EditModal
+        isOpen={isEditModalOpen}
+        handler={closeEditModal}
+        onSave={handleSave}
+      />
     </motion.div>
   );
 };
