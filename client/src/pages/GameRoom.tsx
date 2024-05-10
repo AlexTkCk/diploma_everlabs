@@ -67,6 +67,8 @@ const GameRoom = () => {
                 if (innerTimer === 0) {
                     clearInterval(timerInterval);
                     setIsModalOpen(true);
+                    if (textAreaRef.current)
+                        textAreaRef.current.disabled = true;
                 }
             }
         })(), 1000);
@@ -208,7 +210,7 @@ const GameRoom = () => {
                     {text.map(({value, state}, index) => <span key={index} className={`${charStateMap[state]} ${index === caret ? 'border-l border-white caret_here' : ''} transition duration-250 ease-linear`}>{value}</span>)}
                 </div>
             </div>
-            <button className={'mx-auto mb-10 grid place-items-center bg-red-600 rounded-xl w-1/5 py-5 border border-black'}><FaFlag className={'text-white text-5xl text-center'}/></button>
+            <button onClick={() => setIsModalOpen(true)} className={'mx-auto mb-10 grid place-items-center bg-red-600 rounded-xl w-1/5 py-5 border border-black'}><FaFlag className={'text-white text-5xl text-center'}/></button>
             {isModalOpen && <SessionLineChar sessionData={sessionChartData}></SessionLineChar>}
         </motion.div>
     );
