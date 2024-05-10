@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
-import Row from "../components/Row";
+import RowLb from "../components/RowLb";
 import Checkbox from "../components/CheckBox";
 import dataLB from "../data/leaderboardData.json";
 
@@ -53,7 +53,7 @@ const LeaderBoard = () => {
 
   return (
     <motion.div
-      className={"grow overflow-y-hidden flex flex-col px-5 py-3"}
+      className={"growLb overflow-y-hidden flex flex-col px-5 py-3"}
       variants={pageVariants}
       initial={"initial"}
       animate={"animate"}
@@ -65,9 +65,9 @@ const LeaderBoard = () => {
         onChange={handleSearch}
         className="w-1/4 p-2 mx-auto mb-5 border-2 border-black rounded-2xl"
       />
-      <div className="flex flex-row gap-10 w-full grow font-secondary min-h-0">
+      <div className="flex flex-rowLb gap-10 w-full growLb font-secondary min-h-0">
         <div className="w-3/4 h-full border-2 border-black flex flex-col rounded-2xl py-5 px-2">
-          <div className="flex flex-row justify-around pb-2 text-xl font-bold">
+          <div className="flex flex-rowLb justify-around pb-2 text-xl font-bold">
             <span className="w-1/3 text-center">Name</span>
             <span className="w-1/3 text-center">Speed</span>
             <span className="w-1/3 text-center">Time</span>
@@ -75,14 +75,14 @@ const LeaderBoard = () => {
           <hr className="border-black" />
           <div
             className={
-              "grow overflow-y-scroll scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-100"
+              "growLb overflow-y-scroll scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-100"
             }
           >
             <div className={"h-[3000px] flex flex-col gap-5"}>
               <hr className="border-black" />
               {filteredData.length ? (
                 filteredData.map((player) => (
-                  <Row key={player.id} dataLB={player} />
+                  <RowLb key={player.id} dataLB={player} />
                 ))
               ) : (
                 <p className="mx-auto text-2xl">User not found</p>
