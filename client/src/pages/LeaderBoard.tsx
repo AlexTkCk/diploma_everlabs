@@ -82,7 +82,13 @@ const LeaderBoard = () => {
               <hr className="border-black" />
               {filteredData.length ? (
                 filteredData.map((player) => (
-                  <RowLb key={player.id} dataLB={player} />
+                  <motion.div
+                    key={player.id}
+                    layout
+                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                  >
+                    <RowLb dataLB={player} />
+                  </motion.div>
                 ))
               ) : (
                 <p className="mx-auto text-2xl">User not found</p>
