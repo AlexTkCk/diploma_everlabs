@@ -63,7 +63,7 @@ const EditModal: React.FC<TEditModal> = ({ isOpen, handler, onSave }) => {
 
           <Button
             handler={handleSave}
-            buttonClassName={`w-fit mx-auto hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
+            buttonClassName={`w-fit mx-auto hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
           >
             Close
           </Button>
