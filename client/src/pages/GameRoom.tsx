@@ -4,7 +4,7 @@ import {motion} from "framer-motion";
 import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
 import {FaFlag} from "react-icons/fa";
 import { FaCarSide } from "react-icons/fa";
-import SessionLineChar from "../components/SessionLineChar";
+import SessionLineChar, {SessionData} from "../components/SessionLineChar";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
 
@@ -21,6 +21,7 @@ const charStateMap = {
 }
 
 const plaintext = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+const timeDuration = 5;
 const GameRoom = () => {
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -39,26 +40,27 @@ const GameRoom = () => {
 
     const [charsInARow, setCharsInARow] = useState(0);
 
-    const [timer, setTimer] = useState(30);
+    const [timer, setTimer] = useState(timeDuration);
 
     const [sessionData, setSessionData] = useState({correctSymbols: 0, totalSymbols: 0});
-    const [sessionChartData, setSessionChartData] = useState<{sps: number, accuracy: number}[] | []>([]);
+    const [sessionChartData, setSessionChartData] = useState<SessionData[] | []>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    console.log(sessionChartData)
+
     const sendMessage = (symbol: string, trueSymbol: string): void => {
         if (ws) ws.send(JSON.stringify({sym: symbol, trueSym: trueSymbol}))
     }
 
     useEffect(() => {
         setSessionChartData(prev => [...prev, {
-            sps: sessionData.totalSymbols / (Math.abs(timer - 30) + 0.0000001),
-            accuracy: sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001)
+            name: Math.abs(timer - timeDuration) + 's',
+            sps: Math.round(sessionData.totalSymbols / (Math.abs(timer - timeDuration) + 0.0000001) * 100) / 100,
+            accuracy: Math.round(sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001) * 100) / 100
         }])
     }, [timer])
 
     useEffect(() => {
         const timerInterval = setInterval((() => {
-            let innerTimer = 30;
+            let innerTimer = timeDuration;
             return () => {
                 setTimer(prev => prev - 1 < 0 ? 0 : prev - 1);
                 innerTimer--;
