@@ -90,7 +90,10 @@ const MultiplayerRoom = () => {
                   <motion.div
                     key={room.id}
                     layout
-                    transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 120 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                   >
                     <RowMp dataMp={room} />
                   </motion.div>
