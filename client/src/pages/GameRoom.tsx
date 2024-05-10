@@ -4,6 +4,7 @@ import {motion} from "framer-motion";
 import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
 import {FaFlag} from "react-icons/fa";
 import { FaCarSide } from "react-icons/fa";
+import SessionLineChar from "../components/SessionLineChar";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
 
@@ -40,17 +41,31 @@ const GameRoom = () => {
 
     const [timer, setTimer] = useState(30);
 
+    const [sessionData, setSessionData] = useState({correctSymbols: 0, totalSymbols: 0});
+    const [sessionChartData, setSessionChartData] = useState<{sps: number, accuracy: number}[] | []>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    console.log(sessionChartData)
     const sendMessage = (symbol: string, trueSymbol: string): void => {
         if (ws) ws.send(JSON.stringify({sym: symbol, trueSym: trueSymbol}))
     }
 
     useEffect(() => {
-        const interval = setInterval((() => {
+        setSessionChartData(prev => [...prev, {
+            sps: sessionData.totalSymbols / (Math.abs(timer - 30) + 0.0000001),
+            accuracy: sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001)
+        }])
+    }, [timer])
+
+    useEffect(() => {
+        const timerInterval = setInterval((() => {
             let innerTimer = 30;
             return () => {
                 setTimer(prev => prev - 1 < 0 ? 0 : prev - 1);
                 innerTimer--;
-                if (innerTimer === 0) clearInterval(interval);
+                if (innerTimer === 0) {
+                    clearInterval(timerInterval);
+                    setIsModalOpen(true);
+                }
             }
         })(), 1000);
 
@@ -60,6 +75,9 @@ const GameRoom = () => {
             const {width: childWidth} = child.getBoundingClientRect();
             setCharsInARow(Math.round(containerWidth / childWidth))
         }
+
+
+
     }, [])
 
     useEffect(() => {
@@ -167,6 +185,11 @@ const GameRoom = () => {
                             return prev.map((symbol, index) => {
                                 if (index === caret) {
                                     sendMessage(key, symbol.value);
+                                    setSessionData(prev => ({
+                                        ...prev,
+                                        correctSymbols: prev.correctSymbols + +(key === symbol.value),
+                                        totalSymbols: prev.totalSymbols + 1
+                                    }))
                                     return {
                                         state: key === symbol.value ? charStateEnum.CORRECT : charStateEnum.WRONG,
                                         value: symbol.value
@@ -184,6 +207,7 @@ const GameRoom = () => {
                 </div>
             </div>
             <button className={'mx-auto mb-10 grid place-items-center bg-red-600 rounded-xl w-1/5 py-5 border border-black'}><FaFlag className={'text-white text-5xl text-center'}/></button>
+            {isModalOpen && <SessionLineChar sessionData={sessionChartData}></SessionLineChar>}
         </motion.div>
     );
 };
