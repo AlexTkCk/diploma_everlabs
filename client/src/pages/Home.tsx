@@ -33,10 +33,10 @@ const Home = () => {
             </div>
 
             <div className={'py-5 grow flex justify-center gap-10'}>
-                <div className={`skew-x-[30deg] h-full w-1/4 ${themeConfig.secondary} [transition:background-color_0.5s,_transform_0.25s] flex flex-col items-center justify-evenly py-2 ${themeConfig.hoverNeon} hover:scale-110`}>
+                <div className={`skew-x-[30deg] h-full w-1/3 ${themeConfig.secondary} [transition:background-color_0.5s,_transform_0.25s] flex flex-col items-center justify-evenly py-2 ${themeConfig.hoverNeon} hover:scale-110`}>
                     <h1 className={'-skew-x-[30deg] font-primary text-title-lg w-full px-10'}>Typing Test</h1>
                     <p className={'-skew-x-[30deg] font-secondary text-paragraph-lg w-full px-16'}>Improve your typing skills on your own</p>
-                    <div className={'-skew-x-[30deg] flex gap-5 px-16'}>
+                    <div className={'-skew-x-[30deg] flex gap-5 py-2 px-16'}>
                         <img className={`w-1/4 aspect-square`} src={racer_img}/>
                         <img className={`w-1/4 aspect-square`} src={versus_img}/>
                         <img className={`w-1/4 aspect-square`} src={ai_img}/>
@@ -48,10 +48,10 @@ const Home = () => {
                         </Button>
                     </span>
                 </div>
-                <div className={`skew-x-[30deg] h-full w-1/4 ${themeConfig.secondary} [transition:background-color_0.5s,_transform_0.25s] flex flex-col items-center justify-evenly py-2 ${themeConfig.hoverNeon} hover:scale-110`}>
+                <div className={`skew-x-[30deg] h-full w-1/3 ${themeConfig.secondary} [transition:background-color_0.5s,_transform_0.25s] flex flex-col items-center justify-evenly py-2 ${themeConfig.hoverNeon} hover:scale-110`}>
                     <h1 className={'-skew-x-[30deg] font-primary text-title-md w-full px-10'}>Race your friends</h1>
                     <p className={'-skew-x-[30deg] font-secondary text-paragraph-lg w-full px-16'}>Create your own racetrack and play with friends</p>
-                    <div className={'-skew-x-[30deg] flex gap-5 px-16'}>
+                    <div className={'-skew-x-[30deg] flex gap-5 py-2 px-16'}>
                         <img className={'w-1/4 aspect-square'} src={racer_img}/>
                         <img className={'w-1/4 aspect-square'} src={versus_img}/>
                         <img className={'w-1/4 aspect-square'} src={racer_img}/>
