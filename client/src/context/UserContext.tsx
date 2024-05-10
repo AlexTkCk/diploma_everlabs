@@ -1,21 +1,25 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {TUser} from "../types";
 
 type TUserContextProps = {
     children: React.ReactNode;
 }
 
-const userContext = createContext<TUser>(null);
+type TUserContext = {
+    user: TUser,
+    setUser: Dispatch<SetStateAction<TUser>>
+}
+
+export const userContext = createContext<TUserContext>({
+    user: null,
+    setUser: () => {}
+});
 
 const UserContext = ({children}: TUserContextProps) => {
     const [user, setUser] = useState<TUser>(null);
 
-    useEffect(() => {
-
-    }, []);
-
     return (
-        <userContext.Provider value={user}>
+        <userContext.Provider value={{user, setUser}}>
             {children}
         </userContext.Provider>
     );
