@@ -7,9 +7,11 @@ import { MdLeaderboard } from "react-icons/md";
 import { BiSolidUserAccount } from "react-icons/bi";
 import { themeContext } from "../context/ThemeContext";
 import { themeStyles } from "../styles/themeStyles";
+import {userContext} from "../context/UserContext";
 
 const Navigation = () => {
   const { themeConfig } = useContext(themeContext);
+  const {user} = useContext(userContext);
 
   return (
     <div
@@ -38,7 +40,7 @@ const Navigation = () => {
           icon={MdLeaderboard}
         />
         <CustomLink
-          link={"/account"}
+          link={user ? "/account" : "/login"}
           text={"Account"}
           icon={BiSolidUserAccount}
         />
