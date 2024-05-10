@@ -1,17 +1,18 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
     LineChart,
     Line,
     XAxis,
-    YAxis,
     Tooltip,
     CartesianGrid,
     ResponsiveContainer,
 } from 'recharts';
+import {themeContext} from "../context/ThemeContext";
 
-interface SessionData {
+export interface SessionData {
     sps: number;
     accuracy: number;
+    name: string;
 }
 
 interface SessionLineChartProps {
@@ -19,21 +20,26 @@ interface SessionLineChartProps {
 }
 
 const SessionLineChart = ({ sessionData } : SessionLineChartProps) => {
+
+    const {themeConfig} = useContext(themeContext);
+
     return (
-        <ResponsiveContainer width={500} height={500} className={`bg-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}>
-            <LineChart data={sessionData}>
-                <XAxis dataKey="time" />
-                <YAxis />
-                <CartesianGrid />
-                <Tooltip />
-                <Line type="monotone" dataKey="sps" stroke="#4caf50" />
-                <Line
-                    type="monotone"
-                    dataKey="accuracy"
-                    dot={false}
-                />
-            </LineChart>
-        </ResponsiveContainer>
+        <div className={'absolute w-full h-full grid place-items-center'}>
+            <div className={'absolute w-full h-full opacity-80 bg-black'}>
+
+            </div>
+
+            <ResponsiveContainer width={'30%'} height={'30%'} className={`px-2 z-10 py-5 border ${themeConfig.primary} border-white border-2 rounded-xl ${themeConfig.neon}`}>
+                <LineChart data={sessionData}>
+                    <XAxis dataKey={'name'}/>
+                    <CartesianGrid />
+                    <Tooltip />
+                    <Line type="bump" dataKey="sps" stroke="#65a30d" strokeWidth={5}/>
+                    <Line type="monotone" dataKey="accuracy" stroke="#1d4ed8" strokeWidth={5}/>
+
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
     );
 };
 
