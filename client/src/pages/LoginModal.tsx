@@ -4,13 +4,20 @@ import Button from "../components/Button";
 import { FcGoogle } from "react-icons/fc";
 import {themeContext} from "../context/ThemeContext";
 import {Link} from "react-router-dom";
+import { motion } from "framer-motion";
+import {pageVariants} from "../styles/variants";
 
 const LoginModal = () => {
 
     const {themeConfig} = useContext(themeContext);
 
   return (
-    <div className={"relative w-full h-full grid place-items-center"}>
+    <motion.div
+        variants={pageVariants}
+        initial={'initial'}
+        animate={'animate'}
+        exit={'exit'}
+        className={"relative w-full h-full grid place-items-center"}>
       <div
         className={"absolute top-0 left-0 w-full h-full bg-black opacity-80"}
       ></div>
@@ -43,7 +50,7 @@ const LoginModal = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
