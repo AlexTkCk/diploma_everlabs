@@ -86,6 +86,9 @@ const LeaderBoard = () => {
                     key={player.id}
                     layout
                     transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                   >
                     <RowLb dataLB={player} />
                   </motion.div>
