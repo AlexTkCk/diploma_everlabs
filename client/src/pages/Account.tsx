@@ -1,12 +1,24 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext, useEffect} from "react";
 import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
 import user_avatar from "../assets/user_avatar.jpeg";
 import Button from "../components/Button";
 import EditModal from "../components/EditModal";
 import { themeContext } from "../context/ThemeContext";
+import {userContext} from "../context/UserContext";
+import {useNavigate} from "react-router";
+import {v4 as uuid4} from 'uuid';
 
 const Account = () => {
+  const {userData, setUserId, setUserData} = useContext(userContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userData) {
+      navigate('/login');
+    }
+  }, [userData])
+
   const { themeConfig } = useContext(themeContext);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [data, setData] = useState({
@@ -53,6 +65,11 @@ const Account = () => {
       animate={"animate"}
       exit={"exit"}
     >
+      <button className={'border border-black px-4 py-2 text-2xl'} onClick={() => {
+        setUserId(uuid4());
+        localStorage.removeItem('jwt');
+        setUserData(null);
+      }}>Log out</button>
       <div className="relative h-full w-3/4 flex flex-col gap-8 border-2 border-slate-900 p-8 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat">
         <h2 className="text-5xl">Driver Licence</h2>
         <div className="h-full flex flex-row gap-10">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "../pages/Home";
 import { AnimatePresence } from "framer-motion";
@@ -6,6 +6,8 @@ import Account from "../pages/Account";
 import LeaderBoard from "../pages/LeaderBoard";
 import GameRoom from "../pages/GameRoom";
 import MupliplayerRoom from "../pages/MultiplayerRoom";
+import LoginModal from "../pages/LoginModal";
+import SignUpModal from "../pages/SignUpModal";
 
 const AnimRoutes = () => {
   const location = useLocation();
@@ -18,6 +20,8 @@ const AnimRoutes = () => {
         <Route path={"/leaderboard"} element={<LeaderBoard />}></Route>
         <Route path={"/gameRoom"} element={<GameRoom />}></Route>
         <Route path={"/multiplayerRoom"} element={<MupliplayerRoom />}></Route>
+        <Route path={"/login"} element={<LoginModal />}></Route>
+        <Route path={"/signup"} element={<SignUpModal />}></Route>
       </Routes>
     </AnimatePresence>
   );

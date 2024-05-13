@@ -16,3 +16,7 @@ export type TThemeConfig = {
     hoverNeon: string,
     info: string,
 }
+
+export type TUserData = {
+    name: string;
+} | null;
