@@ -1,16 +1,28 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { FcGoogle } from "react-icons/fc";
 import {themeContext} from "../context/ThemeContext";
 import {Link} from "react-router-dom";
+import {userContext} from "../context/UserContext";
+import {pageVariants} from "../styles/variants";
+import { motion } from "framer-motion";
+import {useNavigate} from "react-router";
 
 const LoginModal = () => {
 
     const {themeConfig} = useContext(themeContext);
+    const {setUserId, setUserData} = useContext(userContext);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
   return (
-    <div className={"relative w-full h-full grid place-items-center"}>
+    <motion.div className={"relative w-full h-full grid place-items-center"}
+         variants={pageVariants}
+         initial={'initial'}
+         animate={'animate'}
+         exit={'exit'}>
       <div
         className={"absolute top-0 left-0 w-full h-full bg-black opacity-80"}
       ></div>
@@ -32,9 +44,19 @@ const LoginModal = () => {
           />
           <div className={"flex justify-between items-center gap-2"}>
             <Button
-              handler={() => {}}
+              handler={() => {
+                    new Promise(resolve => {
+                        setTimeout(() => resolve('123'), 1000);
+                    }).then((newId) => {
+                            setUserId(newId as string)
+                            setUserData({
+                                name: 'Name'
+                            })
+                            navigate('/account');
+                    })
+              }}
 
-              buttonClassName="hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white bg-purple-300"
+              buttonClassName="hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white bg-purple-300"
             >
                 Log in
             </Button>
@@ -43,7 +65,7 @@ const LoginModal = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
