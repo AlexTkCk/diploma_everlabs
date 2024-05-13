@@ -17,7 +17,7 @@ type TRowMp = {
 
 const RowMp: React.FC<TRowMp> = ({ dataMp, children }) => {
   return (
-    <button className="flex flex-row justify-around text-center ml-2 text-xl transition-all items-center h-10  active:bg-gray-200">
+    <div className="flex flex-row justify-around text-center ml-2 text-xl transition-all items-center h-10  active:bg-gray-200 cursor-pointer">
       <span className="w-1/5 ">{dataMp.id}</span>
       <span className="w-2/5">{dataMp.name}</span>
       <span className="w-1/5">
@@ -35,7 +35,7 @@ const RowMp: React.FC<TRowMp> = ({ dataMp, children }) => {
           <FaLockOpen className="text-3xl mx-auto h-full" />
         )}
       </span>
-    </button>
+    </div>
   );
 };
 

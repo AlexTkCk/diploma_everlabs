@@ -87,7 +87,16 @@ const MultiplayerRoom = () => {
               <hr className="border-black" />
               {filteredData.length ? (
                 filteredData.map((room) => (
-                  <RowMp key={room.id} dataMp={room} />
+                  <motion.div
+                    key={room.id}
+                    layout
+                    transition={{ type: "spring", damping: 25, stiffness: 120 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <RowMp dataMp={room} />
+                  </motion.div>
                 ))
               ) : (
                 <p className="mx-auto text-2xl">Rooms not found</p>
