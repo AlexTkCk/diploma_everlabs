@@ -87,7 +87,7 @@ const Account = () => {
             Started playing: <br /> {data.startedPlaying}
           </p>
           <Button
-            buttonClassName={`absolute top-5 right-5 bg-slate-200 hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
+            buttonClassName={`absolute top-5 right-5 bg-slate-200 hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
             handler={openEditModal}
           >
             Edit
