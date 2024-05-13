@@ -17,6 +17,6 @@ export type TThemeConfig = {
     info: string,
 }
 
-export type TUser = {
-    id: string;
+export type TUserData = {
+    name: string;
 } | null;
