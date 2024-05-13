@@ -1,12 +1,23 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext, useEffect} from "react";
 import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
 import user_avatar from "../assets/user_avatar.jpeg";
 import Button from "../components/Button";
 import EditModal from "../components/EditModal";
 import { themeContext } from "../context/ThemeContext";
+import {userContext} from "../context/UserContext";
+import {useNavigate} from "react-router";
 
 const Account = () => {
+  const {userData} = useContext(userContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userData) {
+      navigate('/login');
+    }
+  }, [userData])
+
   const { themeConfig } = useContext(themeContext);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [data, setData] = useState({
