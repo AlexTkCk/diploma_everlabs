@@ -4,7 +4,7 @@ import Button from "../components/Button";
 import { FcGoogle } from "react-icons/fc";
 import {themeContext} from "../context/ThemeContext";
 import {Link} from "react-router-dom";
-import {userContext} from "../context/UserContext";
+import {jwtData, userContext} from "../context/UserContext";
 import {pageVariants} from "../styles/variants";
 import { motion } from "framer-motion";
 import {useNavigate} from "react-router";
@@ -34,7 +34,7 @@ const LoginModal = () => {
         <div className={"mx-auto flex flex-col gap-10"}>
           <Input
             placeholder={"example@gmail.com"}
-            changeHandler={() => {}}
+            changeHandler={({currentTarget: {value}}) => {setEmail(value)}}
             labelText={"Login"}
           />
           <Input
@@ -45,14 +45,23 @@ const LoginModal = () => {
           <div className={"flex justify-between items-center gap-2"}>
             <Button
               handler={() => {
-                    new Promise(resolve => {
-                        setTimeout(() => resolve('123'), 1000);
-                    }).then((newId) => {
-                            setUserId(newId as string)
+                    new Promise<{id: string, jwt: string}>((resolve, reject) => {
+                        setTimeout(() => {
+                            const user = jwtData.find(user => user.email === email) as {id: string, jwt: string};
+                            if (user)
+                                resolve(user)
+
+                            reject(null)
+                        }, 1000);
+                    }).then(({id, jwt}) => {
+                            setUserId(id)
                             setUserData({
                                 name: 'Name'
                             })
+                            localStorage.setItem('jwt', jwt)
                             navigate('/account');
+                    }).catch(() => {
+                        alert('Wrong credentials')
                     })
               }}
 
