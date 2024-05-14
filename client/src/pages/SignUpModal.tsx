@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import {themeContext} from "../context/ThemeContext";
 import {pageVariants} from "../styles/variants";
 import { motion } from "framer-motion";
-import {jwtData, userContext} from "../context/UserContext";
+import {userContext} from "../context/UserContext";
 import {v4 as uuid4} from 'uuid';
 import {useNavigate} from "react-router";
 
@@ -50,23 +50,15 @@ const SignUpModal = () => {
                     <div className={"flex justify-center items-center gap-5"}>
                         <Button
                             handler={() => {
-                                const jwt = uuid4().slice(0, 6);
-                                const id = '' + jwtData.length;
-                                jwtData.push({
-                                    email,
-                                    jwt,
-                                    id,
-                                    name: 'user ' + jwt
-                                })
-                                setUserId(id);
-                                localStorage.setItem('jwt', jwt);
-                                navigate('/');
+
                             }}
                             buttonClassName="hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white bg-purple-300"
                         >
                             Sign up
                         </Button>
-                        <FcGoogle className={"text-7xl stroke-black stroke-1"} />
+                        <a href={'https://f08c-78-137-13-80.ngrok-free.app/auth/google_oauth2'} target={'_blank'} >
+                            <FcGoogle className={"text-7xl stroke-black stroke-1"} />
+                        </a>
                     </div>
                 </div>
             </div>
