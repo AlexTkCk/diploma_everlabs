@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const BackWheel = (props) => {
+const BackWheel = (props: {className: string}) => {
     return <pre className={props.className}>
         {
         `
@@ -18,7 +18,7 @@ const BackWheel = (props) => {
     </pre>
 }
 
-const FrontWheel = (props) => {
+const FrontWheel = (props: {className: string}) => {
     return <pre className={props.className}>
         {
             `
@@ -34,7 +34,7 @@ const FrontWheel = (props) => {
     </pre>
 }
 
-const Car = ({speed, children=<></>}) => {
+const Car = ({speed, children=<></>}: {speed: number, children?: React.ReactNode}) => {
     return (
         <pre className={'relative text-white text-[5px] relative w-fit'}>
             {children}
