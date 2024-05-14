@@ -3,8 +3,8 @@ import {pageVariants} from "../styles/variants";
 import {motion} from "framer-motion";
 import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
 import {FaFlag} from "react-icons/fa";
-import { FaCarSide } from "react-icons/fa";
 import SessionLineChar, {SessionData} from "../components/SessionLineChar";
+import Car from "../components/Car";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
 
@@ -13,6 +13,32 @@ enum charStateEnum {
     WRONG,
     NEUTRAL
 }
+
+const city =
+    `
+                                                                                                                                 /@@&
+                                                                                                                                &////#                ,                                                 
+                                                                        @                                                       &..../                ,                                                 
+                                                                      @@@                                                       &&&&&@                @                                                 
+                                                  #                *@@@@@                                                       &####%                @                                                 
+                                                  @              @@@@@@@@                                                       &    *               @@@                                                
+                                                  @             (@%&@%%@@                                                      @(@ ,@ @            @@@@@@@            @@                                
+                                    @            @@@            (@ ,@  @@                                                      @@@@@@@@            @@@@@@@          @@@@@                               
+                                   @@           @@@@@&          /@/(@//@@                                                      @(@ ,@ @          @@ %@.,@# @       &@@@@@&&                             
+                                  @@@@        %%@@@@@@%,        (@*(@**@@@@   @@@@@@@@                                 ,@&*@*&@@@@@@@@@@@@@@     @@ %@.,@# @       @ ,@ @ @  @@                         
+                              / ,@&(@/@@      @#######@*       /@@.*@.,@@###  @%/*#@@@     @@ @ @@                     ,@&*@*&@@(@ ,@ @..%@@     @@ %@.,@# @       @@@@@@@@  @@@@       @               
+                            @@@ ,@%*@ @@    ( @       @*    .@@@@@&&@&&@@@@@@@@%/*#@@@     @@ @ @@                     ,@&*@*&@@@@&@@&@  #@@     @@ %@..@% @///    @.,@ @.@   @,(@   *@@@  @#           
+           *@@        @   @@@@@ ,@%*@ @@    @ @#######@*    @@*  @ ,@  @@.. @@@%/*#@@@     @@ @ @@         @&#%%%@     ,@&*@*&@@(@.*@ @  #@@  @  @@ %@..@% @,,,.   @ ,@ @ @   @,(@  ****@  @#           
+           *@@@@     @@@  @ %&@ ,@%*@ @@   /#,@&&&&&&&@*    @@@@@@@@@@@@@&&&@@@%/*#@@@     @@ @ @@    @    @%#%%%@  @  ,@&*@*&@@%@/#@/@  #@@ @@@ @@ %@..@% @@@@@@@@@@@@@@@@   @,(@  .   @ &%%           
+  (        *@ *@    @%%%@ @ %&@ ,@%*@ @@@@@#%(@.......@*    @@/,,@ ,@  @@%%%@@@%/*#@@@     @@ @ @@   @@@   @&#%%%@  @  ,@&*@*&@@#@*(@*@  #@@%///@@@ %@..@% @///@,%@@#%@#@(@   @,(@  ****@ %%%           
+  #        *@.(@@,,*@%%%@ @ %&@ ,@%*@ @&%%@&&%@@@@@@@@@*%%% @@(,,@@@@@@@@   @@@%/*#@@@@@@  @@ @ @@#&/*@#/##@&#%%%@  @@@,@&*@*&@@(@ *@ @  #@@#,,,@@@ %@..@% @...@*%@@ ,@ @ @@@ @,(@@@@@@@@@&%%@          
+  #       @%@%&@@&&&@%%%@@@*&&@@@@%*@ @&%%@&&%@#######@@#%%@@@#((@ ,@  @@###@@@%/*#@@@ ,@@@@@ @ @@.@. @/ @#@&#%%%@@@@@@,@&*@*&@@&@#%@#@  #@@#***@@@ %@..@% @@@@@(&@@(#@(@(@@@ @,(@@@@@@@@@&%%@       @@@
+  .      ,@&@%&@@..,@%%%@@@(&@@@@@%*@ @(  @@@@@       @@#%%@@@*  @@@@@@@@%%%@@@%/*#@@@@@@@@@@ @ @@.@,.@(.@&@&#%%%@@@@@#,@&*@*&@@(@ ,@ @..%@@(...@@@ %@..@% @***@&@@@@@@@@@@@@ @,(@@@&&&%@@&%%@@%&@   @@@
+  %      @@@@,(@@%%%@%%#@@@&@@@@@@%*@ @@@@@@@@@%%%%%%%@@##%@@@@@@@ ,@  @@.. @@@&##%@@@ ,@@@@@ @ @@*@%#@&#@@@&#%%%@@@@@#,@&*@*&@@@@&&@&@**&@@#***@@@.%@,,@%.@,,,@@@@@ ,@ @ @@@.@*#@@@,...@@&%%@@@@@...@@@
+  (  //// @%@ /@@@@@@%#%@@@@@@@@@@@@@@@#**@@@@@@@@@@@@@@%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @ @@#@&&@&&@@@&#%%%@@@@@&@@@@@@@@@@@@@@@@@@@@@(,,,@@@@@@@@@@@@@@@@@@@@.*@.@.@@@@@@@@@@@@@@@@&%%@@&&@@@@@@@
+  #. @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*,@(,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@**@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    `
 
 const charStateMap = {
     [charStateEnum.CORRECT]: 'text-green-500',
@@ -86,15 +112,24 @@ const GameRoom = () => {
 
     useEffect(() => {
         if (roadRef.current) {
-            setFromLeft(prev => prev + playerSpeed)
-            roadRef.current.style.marginLeft = '-' + fromLeft + 'px';
+            roadRef.current.scrollBy(10, 0)
         }
     }, [playerSpeed]);
 
     useEffect(() => {
         if (enemyRef.current) {
-            setEnemyFromLeft(prev => prev + enemySpeed - playerSpeed);
-            enemyRef.current.style.marginLeft = enemyFromLeft + 'px';
+            if (enemySpeed === 0) {
+                enemyRef.current.style.marginLeft = 0 + 'px';
+            }
+            if (enemySpeed > 10) {
+                enemyRef.current.style.marginLeft = '-' + 100 + 'px';
+            }
+            if (enemySpeed > 20) {
+                enemyRef.current.style.marginLeft = '-' + 200 + 'px';
+            }
+            if (enemySpeed > 30) {
+                enemyRef.current.style.marginLeft = '-' + 300 + 'px';
+            }
         }
     }, [enemySpeed, playerSpeed]);
 
@@ -112,6 +147,7 @@ const GameRoom = () => {
         }
     }, [caret])
 
+
     useEffect(() => {
         const socket = new WebSocket('ws://localhost:8080');
 
@@ -121,10 +157,13 @@ const GameRoom = () => {
 
         socket.onmessage = (event) => {
             const {owner, speed} = JSON.parse(event.data);
-            if (owner === 1)
+            const botSpeed = +speed < 0 ? 0 : +speed + Math.random() * 2 - 1;
+            if (owner === 1) {
                 setPlayerSpeed(prev => prev + +speed < 0 ? 0 : prev + +speed);
-            else
+                setEnemySpeed(prev => prev + botSpeed < 0 ? 0 : prev + botSpeed);
+            } if (owner === 2) {
                 setEnemySpeed(prev => prev + +speed < 0 ? 0 : prev + +speed);
+            }
         };
 
         socket.onerror = (error) => {
@@ -145,23 +184,37 @@ const GameRoom = () => {
     for (let i=0; i<1000; i++) {
         dashes.push(<div key={i} className={'bg-white h-2 w-10'}></div>)
     }
-
     return (
         <motion.div className={'absolute flex flex-col top-0 left-0 w-full h-full bg-white z-10 overflow-x-hidden'}
                     variants={pageVariants}
                     initial={'initial'}
                     animate={'animate'}
                     exit={'exit'}>
-            <div className={'h-3/5 bg-black relative grid place-items-center'}>
-                <div ref={enemyRef} className={'absolute top-2 left-10 transition-all duration-500 ease-linear'}>
-                    <FaCarSide className={'text-[300px] text-white bg-none'}/>
+            <div className={'h-3/5 bg-black flex flex-col'}>
+                <div ref={roadRef} className={'flex overflow-x-scroll'}>
+                    <pre className={'text-[6px] text-white'}>
+                        {city}
+                    </pre>
+                    <pre className={'text-[6px] text-white'}>
+                        {city}
+                    </pre>
+                    <pre className={'text-[6px] text-white'}>
+                        {city}
+                    </pre>
+                    <pre className={'text-[6px] text-white'}>
+                        {city}
+                    </pre>
                 </div>
-                <div ref={roadRef} className={'absolute flex gap-5 top-[50%] transition-all duration-500 ease-linear'}>
-                    {dashes.map(dash => dash)}
+                <hr className={'w-screen h-0.5 bg-white'}/>
+                <div className={'flex flex-col'}>
+                    <div ref={enemyRef} className={' transition-all duration-500 ease-linear'}>
+                        <Car speed={enemySpeed}/>
+                    </div>
+                    <Car speed={playerSpeed}>
+                        <span className={'absolute bottom-full text-center left-0 w-1/2 border-white border bg-black text-white p-1 text-sm'}>You</span>
+                    </Car>
                 </div>
-                <div className={'absolute left-10 bottom-1'}>
-                    <FaCarSide className={'text-[300px] text-white bg-none'}/>
-                </div>
+
             </div>
             <div className={'flex w-full px-5 py-2 justify-evenly mb-2'}>
                 <div className={'flex gap-2 px-2 py-2 border border-black items-center'}>
