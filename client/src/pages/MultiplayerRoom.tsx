@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Checkbox from "../components/CheckBox";
 import RowMp from "../components/RowMp";
 import dataMp from "../data/multiplayerData.json";
+import MPModal from "../components/MultiplayerModal";
 
 const MultiplayerRoom = () => {
   const [data, setData] = useState(dataMp);
@@ -13,6 +14,9 @@ const MultiplayerRoom = () => {
   const [sortByLock, setSortByLock] = useState(false);
 
   const [initialData, setInitialData] = useState(dataMp);
+
+  const [activeRoom, setActiveRoom] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSort = (sortBy: string) => {
     let newData = [...data];
@@ -42,6 +46,15 @@ const MultiplayerRoom = () => {
     setData(newData);
   };
 
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+  const handleSetActiveRoom = (roomId: any) => {
+    setActiveRoom(roomId);
+  };
   const handleSearch = (e: any) => {
     setSearchData(e.target.value);
   };
@@ -95,7 +108,11 @@ const MultiplayerRoom = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <RowMp dataMp={room} />
+                    <RowMp
+                      dataMp={room}
+                      handler={handleModalOpen}
+                      setActiveRoom={handleSetActiveRoom}
+                    />
                   </motion.div>
                 ))
               ) : (
@@ -129,6 +146,7 @@ const MultiplayerRoom = () => {
           />
         </div>
       </div>
+      {isModalOpen && <MPModal handleCloseModal={handleModalClose} />}
     </motion.div>
   );
 };

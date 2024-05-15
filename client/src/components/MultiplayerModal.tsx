@@ -4,7 +4,11 @@ import hostImg from "../assets/user_avatar.jpeg";
 import MPRoomData from "../data/MPRoomData.json";
 import MPModalRow from "./MPModalRow";
 
-const MultiplayerModal = () => {
+type TMPModal = {
+  handleCloseModal: () => void;
+};
+
+const MultiplayerModal: React.FC<TMPModal> = ({ handleCloseModal }) => {
   const [roomData, setRoomData] = useState(MPRoomData);
   const [playersData, setPlayersData] = useState(MPRoomData.players);
 
@@ -27,7 +31,7 @@ const MultiplayerModal = () => {
         >
           <FaRegWindowClose
             className="absolute top-2 right-2 text-4xl cursor-pointer box-content transition-all duration-300 hover:scale-105 active:scale-95"
-            onClick={() => {}}
+            onClick={handleCloseModal}
           />
 
           <img
