@@ -36,9 +36,9 @@ class UsersController < ApplicationController
       new_user.nickname= Faker::Internet.unique.username
 
       if new_user.save
-        # new_room=Room.new(name: Faker::Lorem.unique.words(number: 2).join(' '), id: new_user.id )
-        # puts new_room
-        # token = generate_token(new_user.id)
+        new_room=Room.create(name: Faker::Lorem.unique.words(number: 2).join(' '), id: new_user.id )
+        new_room.save
+        token = generate_token(new_user.id)
         render json: { message: 'User created successfully', status: "3", id:new_user.id, token: token }
       else
           render json: { error: 'Failed to create user', status: "5" }, status: :unprocessable_entity
