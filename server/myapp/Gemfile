@@ -15,7 +15,7 @@ gem "sqlite3", "~> 1.4"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-
+gem "omniauth-google-oauth2"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem "importmap-rails"
 
@@ -68,12 +68,11 @@ group :test do
   gem "selenium-webdriver"
 end
 
+gem 'rack-cors', require: 'rack/cors'
+gem 'faker'
+
 gem 'sqlite3', '~> 1.4'
 
 gem 'jwt'
 
-gem 'devise'
 
-gem "omniauth-google-oauth2"
-
-gem "omniauth-rails_csrf_protection"

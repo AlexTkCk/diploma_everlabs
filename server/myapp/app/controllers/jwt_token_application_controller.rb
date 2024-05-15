@@ -8,12 +8,12 @@ class JwtTokenApplicationController < ActionController::Base
     token = params['token']
 
     if token.nil?
-      render json: { error: 'Требуется токен аутентификации' }, status: :unauthorized
+      render json: { error: 'Authentication token required', status: '10' }, status: :unauthorized
       return
     end
 
     unless valid_token?(token)
-      render json: { error: 'Недействительный токен' }, status: :unauthorized
+      render json: { error: 'Invalid token', status:'11' }, status: :unauthorized
     end
   end
 
