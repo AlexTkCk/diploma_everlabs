@@ -13,9 +13,10 @@ type TRowMp = {
     password: boolean;
   };
   children?: ReactNode | ReactNode[];
+  handler?: () => void;
 };
 
-const RowMp: React.FC<TRowMp> = ({ dataMp, children }) => {
+const RowMp: React.FC<TRowMp> = ({ dataMp, children, handler }) => {
   return (
     <div className="flex flex-row justify-around text-center ml-2 text-xl transition-all items-center h-10  active:bg-gray-200 cursor-pointer">
       <span className="w-1/5 ">{dataMp.id}</span>
