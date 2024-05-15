@@ -80,8 +80,8 @@ const Account = () => {
           />
           <div className="flex flex-col gap-5 font-primary text-xl">
             <p>
-              <span className="font-bold">Name:</span>
-              {data.name}
+              <span className="font-bold font-primary">Name:</span>
+              {userData?.name}
             </p>
             <p>
               {" "}

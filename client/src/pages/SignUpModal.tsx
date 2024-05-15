@@ -5,14 +5,16 @@ import { FcGoogle } from "react-icons/fc";
 import {themeContext} from "../context/ThemeContext";
 import {pageVariants} from "../styles/variants";
 import { motion } from "framer-motion";
-import {jwtData, userContext} from "../context/UserContext";
-import {v4 as uuid4} from 'uuid';
+import {userContext} from "../context/UserContext";
 import {useNavigate} from "react-router";
+import {serverUrl} from "../data/serverUrl";
 
 const SignUpModal = () => {
 
     const {themeConfig} = useContext(themeContext);
     const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const {setUserId} = useContext(userContext);
 
     const navigate = useNavigate();
@@ -39,34 +41,43 @@ const SignUpModal = () => {
                     />
                     <Input
                         placeholder={"*********"}
-                        changeHandler={() => {}}
+                        changeHandler={({currentTarget: {value}}) => {setPassword(value)}}
                         labelText={"Password"}
+                        type={'password'}
                     />
                     <Input
                         placeholder={"*********"}
-                        changeHandler={() => {}}
+                        changeHandler={({currentTarget: {value}}) => {setConfirmPassword(value)}}
                         labelText={"Confirm pass"}
+                        type={'password'}
                     />
                     <div className={"flex justify-center items-center gap-5"}>
                         <Button
                             handler={() => {
-                                const jwt = uuid4().slice(0, 6);
-                                const id = '' + jwtData.length;
-                                jwtData.push({
-                                    email,
-                                    jwt,
-                                    id,
-                                    name: 'user ' + jwt
-                                })
-                                setUserId(id);
-                                localStorage.setItem('jwt', jwt);
-                                navigate('/');
+                                if (password === confirmPassword) {
+                                    fetch(serverUrl + '/user/signup', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'ngrok-skip-browser-warning': 'true',
+                                            'Accept': 'application/json',
+                                        },
+                                        body: JSON.stringify({'login': email, 'password': password})
+                                    }).then(res => res.json()).then(data => {
+                                        setUserId(data.id);
+                                        localStorage.setItem('jwt', data.token);
+                                    }).then(() => {
+                                        navigate('/');
+                                    })
+                                }
                             }}
                             buttonClassName="hover:shadow-buttonHover hover:shadow-blue-500 transition-all duration-500 hover:text-white bg-purple-300"
                         >
                             Sign up
                         </Button>
-                        <FcGoogle className={"text-7xl stroke-black stroke-1"} />
+                        <a href={'https://f08c-78-137-13-80.ngrok-free.app/auth/google_oauth2'}>
+                            <FcGoogle className={"text-7xl stroke-black stroke-1"} />
+                        </a>
                     </div>
                 </div>
             </div>
