@@ -51,14 +51,29 @@ const LoginModal = () => {
                     />
                     <Input
                         placeholder={"*********"}
-                        changeHandler={() => {
+                        changeHandler={({currentTarget: {value}}) => {
+                            setPassword(value)
                         }}
+                        type={'password'}
                         labelText={"Password"}
                     />
                     <div className={"flex justify-between items-center gap-2"}>
                         <Button
                             handler={() => {
-
+                                fetch(serverUrl + '/user/login', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'ngrok-skip-browser-warning': 'true',
+                                        'Accept': 'application/json',
+                                    },
+                                    body: JSON.stringify({'login': email, 'password': password})
+                                }).then(res => res.json()).then(data => {
+                                    setUserId(data.id);
+                                    localStorage.setItem('jwt', data.token);
+                                }).then(() => {
+                                    navigate('/');
+                                })
                             }}
 
                             buttonClassName="hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white bg-purple-300"
