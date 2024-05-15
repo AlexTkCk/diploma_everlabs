@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PasswordChanger</title>
+  <%= stylesheet_link_tag 'style' %> <!-- Подключаем CSS файл -->
+</head>
+<body>
+<%= form_with(url: "/password/change/#{params[:token]}/#{params[:id]}", class: "pass_form", method: "post") do |form| %>
+ <!-- Создаем форму -->
+  <div class="form_group">
+    <%= form.label :password, "New password" %> <!-- Создаем метку для поля ввода нового пароля -->
+    <%= form.password_field :password, class: "inp", required: true %> <!-- Создаем поле ввода нового пароля -->
+    <button type="button" class="show_password">Show</button>
+  </div>
+  <div class="form_group">
+    <%= form.label :password_confirm, "Confirm password" %> <!-- Создаем метку для поля ввода подтверждения пароля -->
+    <%= form.password_field :password_confirm, class: "inp", required: true %> <!-- Создаем поле ввода подтверждения пароля -->
+    <button type="button" class="show_password">Show</button>
+  </div>
+  <%= form.submit "Send", class: "btn disabled" %> <!-- Создаем кнопку отправки формы -->
+  <div class="alert alert_danger"></div>
+  <div class="alert alert_success"></div>
+<% end %> <!-- Закрываем форму -->
+<%= javascript_include_tag 'main' %> <!-- Подключаем JavaScript файл -->
+</body>
+</html>

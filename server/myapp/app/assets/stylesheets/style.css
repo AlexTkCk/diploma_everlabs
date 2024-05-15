@@ -1,0 +1,121 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+body {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+
+  background-color: #7e7e7e;
+  overflow-x: hidden;
+}
+.pass_form {
+  width: 24em;
+  height: 32em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+
+  padding: 3em;
+
+  background-color: #334064;
+  color: #fff;
+  border: 2px solid #f2f3f4;
+  border-radius: 2em;
+  background: linear-gradient(rgba(35, 43, 85, 0.75), rgba(35, 43, 85, 0.95));
+  backdrop-filter: opacity(20%);
+}
+.form_group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  width: 100%;
+
+  position: relative;
+}
+.form_group label {
+  margin-left: 0.5em;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.form_group input {
+  height: 2.5em;
+  width: 100%;
+
+  font-size: 1rem;
+  color: #f2f3f4;
+  padding: 0.2em 1em;
+
+  background-color: #0d66f529;
+
+  border: none;
+  border-radius: 3em;
+
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+.form_group input:focus {
+  outline: 1px solid white;
+}
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0d67f5;
+  width: 100%;
+  height: 2.5em;
+  padding: 1rem;
+  margin-top: 2em;
+  border-radius: 3em;
+  border: 1px solid #f2f3f4;
+  color: #f2f3f4;
+  font-weight: 600;
+  font-size: 1em;
+
+  cursor: pointer;
+
+  transition: all 0.1s ease-in;
+}
+.btn:hover {
+  filter: brightness(120%);
+}
+.btn:active {
+  transform: scale(0.95);
+}
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.alert {
+  font-size: 1em;
+}
+.alert_danger {
+  color: rgb(249, 32, 32) !important;
+  font-weight: 600;
+}
+.alert_success {
+  color: greenyellow !important;
+}
+.show_password {
+  position: absolute;
+  right: 0.8em;
+  top: 2.6em;
+  cursor: pointer;
+
+  font-size: 0.8rem;
+  font-family: "Inter", sans-serif;
+  padding: 0.5em;
+  border-radius: 1em;
+  border: none;
+  background-color: #0d67f5;
+  color: #f2f3f4;
+}
