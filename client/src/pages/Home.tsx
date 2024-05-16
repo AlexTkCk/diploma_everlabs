@@ -8,6 +8,7 @@ import versus_img from "../assets/versus.svg";
 import { FaFlagCheckered } from "react-icons/fa";
 import { themeContext } from "../context/ThemeContext";
 import { userContext } from "../context/UserContext";
+import Marquee from "react-fast-marquee";
 import recentGames from "../data/recentGames.json";
 
 const Home = () => {
@@ -48,21 +49,23 @@ const Home = () => {
       )}
 
       <div
-        className={`inline-flex flex-row items-center justify-around gap-5 h-32 ${themeConfig.accent} overflow-hidden`}
+        className={`flex flex-row items-center justify-around gap-5 h-32 ${themeConfig.accent} overflow-hidden`}
       >
-        {games.length ? (
-          games.map((game) => (
-            <div
-              className={`inline-flex flex-row gap-2 justify-around items-center w-fit px-5 py-2 ${themeConfig.secondary} text-white font-bold font-primary animate-scroll`}
-            >
-              <p className="text-nowrap">Room name: {game.roomName}</p>
-              <p className="text-nowrap">Time: {game.time}</p>
-              <p className="text-nowrap">Speed: {game.speed}</p>
-            </div>
-          ))
-        ) : (
-          <p>Games list is empty</p>
-        )}
+        <Marquee pauseOnHover={true} speed={100}>
+          {games.length ? (
+            games.map((game) => (
+              <div
+                className={`inline-flex flex-row gap-2 justify-around items-center w-fit px-5 py-2 ${themeConfig.secondary} text-white font-bold font-primary`}
+              >
+                <p className="text-nowrap">Room name: {game.roomName}</p>
+                <p className="text-nowrap">Time: {game.time}</p>
+                <p className="text-nowrap">Speed: {game.speed}</p>
+              </div>
+            ))
+          ) : (
+            <p>Games list is empty</p>
+          )}
+        </Marquee>
       </div>
 
       <div className={"py-5 grow flex justify-center gap-10"}>
