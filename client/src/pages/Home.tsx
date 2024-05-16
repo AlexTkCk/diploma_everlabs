@@ -51,7 +51,7 @@ const Home = () => {
       <div
         className={`flex flex-row items-center justify-around gap-5 h-32 ${themeConfig.accent} overflow-hidden`}
       >
-        <Marquee pauseOnHover={true} speed={100}>
+        <Marquee pauseOnHover={true} speed={100} autoFill>
           {games.length ? (
             games.map((game) => (
               <div
