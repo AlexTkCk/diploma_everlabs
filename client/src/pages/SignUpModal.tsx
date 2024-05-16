@@ -75,7 +75,7 @@ const SignUpModal = () => {
                         >
                             Sign up
                         </Button>
-                        <a href={'https://f08c-78-137-13-80.ngrok-free.app/auth/google_oauth2'}>
+                        <a href={serverUrl + '/auth/google_oauth2'}>
                             <FcGoogle className={"text-7xl stroke-black stroke-1"} />
                         </a>
                     </div>
