@@ -37,6 +37,9 @@ const FrontWheel = (props: {className: string}) => {
 const Car = ({speed, children=<></>}: {speed: number, children?: React.ReactNode}) => {
     return (
         <pre className={'relative text-white text-[5px] relative w-fit'}>
+            <span className={`absolute top-2 -left-10 transition ${speed ? 'animate-[speed_0.5s_ease-in-out_infinite]' : 'hidden'}`}>&%%%%%%(((#</span>
+            <span className={`absolute top-1/2 -left-24 transition ${speed ? 'animate-[speed_1s_ease-in-out_infinite]' : 'hidden'}`}>&%%%%%%(((#&%%%%%%(((#</span>
+            <span className={`absolute bottom-3 -left-14 transition ${speed ? 'animate-[speed_0.75s_ease-in-out_infinite]' : 'hidden'}`}>&%%%%%%(((#</span>
             {children}
             {
             `                                   
