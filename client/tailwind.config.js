@@ -42,6 +42,19 @@ module.exports = {
       backgroundImage: {
         account: "url('/src/assets/account_bg.png')",
       },
+      animation: {
+        scroll: "scroll 12s linear infinite",
+      },
+      keyframes: {
+        scroll: {
+          from: {
+            transform: "translateX(350%)",
+          },
+          to: {
+            transform: "translateX(-350%)",
+          },
+        },
+      },
     },
   },
   plugins: [require("tailwind-scrollbar")],
