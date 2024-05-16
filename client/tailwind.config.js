@@ -3,6 +3,13 @@ module.exports = {
   content: ["./src/**/*.{html,js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      keyframes: {
+        speed: {
+          '0%': { paddingLeft: '100%', opacity: 0 },
+          '75%': { opacity: 1 },
+          '100%': { paddingLeft: '0', opacity: 0 },
+        }
+      },
       fontSize: {
         "title-lg": "2.25rem", // 36px
         "title-md": "1.875rem", // 30px
