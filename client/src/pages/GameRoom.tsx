@@ -47,12 +47,13 @@ const charStateMap = {
 }
 
 const plaintext = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-const timeDuration = 5;
+const timeDuration = 30;
 const GameRoom = () => {
 
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const roadRef = useRef<HTMLDivElement>(null);
     const enemyRef = useRef<HTMLDivElement>(null);
+    const playerRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const [fromLeft, setFromLeft] = useState(0);
@@ -75,7 +76,6 @@ const GameRoom = () => {
     const sendMessage = (symbol: string, trueSymbol: string): void => {
         if (ws) ws.send(JSON.stringify({sym: symbol, trueSym: trueSymbol}))
     }
-
     useEffect(() => {
         setSessionChartData(prev => [...prev, {
             name: Math.abs(timer - timeDuration) + 's',
@@ -105,33 +105,21 @@ const GameRoom = () => {
             const {width: childWidth} = child.getBoundingClientRect();
             setCharsInARow(Math.round(containerWidth / childWidth))
         }
-
-
-
     }, [])
 
     useEffect(() => {
         if (roadRef.current) {
-            roadRef.current.scrollBy(10, 0)
+            setFromLeft(prev => prev + playerSpeed);
+            roadRef.current.style.marginLeft = '-' + fromLeft + 'px';
         }
     }, [playerSpeed]);
 
     useEffect(() => {
         if (enemyRef.current) {
-            if (enemySpeed === 0) {
-                enemyRef.current.style.marginLeft = 0 + 'px';
-            }
-            if (enemySpeed > 10) {
-                enemyRef.current.style.marginLeft = '-' + 100 + 'px';
-            }
-            if (enemySpeed > 20) {
-                enemyRef.current.style.marginLeft = '-' + 200 + 'px';
-            }
-            if (enemySpeed > 30) {
-                enemyRef.current.style.marginLeft = '-' + 300 + 'px';
-            }
+            setEnemyFromLeft(prev => prev + enemySpeed - playerSpeed);
+            enemyRef.current.style.marginLeft = enemyFromLeft + 'px';
         }
-    }, [enemySpeed, playerSpeed]);
+    }, [enemySpeed]);
 
     useEffect(() => {
         if (containerRef.current) {
@@ -157,7 +145,7 @@ const GameRoom = () => {
 
         socket.onmessage = (event) => {
             const {owner, speed} = JSON.parse(event.data);
-            const botSpeed = +speed < 0 ? 0 : +speed + Math.random() * 2 - 1;
+            const botSpeed = Math.random() > 0.5 ? 2 : -2;
             if (owner === 1) {
                 setPlayerSpeed(prev => prev + +speed < 0 ? 0 : prev + +speed);
                 setEnemySpeed(prev => prev + botSpeed < 0 ? 0 : prev + botSpeed);
@@ -179,40 +167,34 @@ const GameRoom = () => {
     }, []);
 
 
-
-    let dashes = [];
-    for (let i=0; i<1000; i++) {
-        dashes.push(<div key={i} className={'bg-white h-2 w-10'}></div>)
-    }
     return (
         <motion.div className={'absolute flex flex-col top-0 left-0 w-full h-full bg-white z-10 overflow-x-hidden'}
                     variants={pageVariants}
                     initial={'initial'}
                     animate={'animate'}
                     exit={'exit'}>
-            <div className={'h-3/5 bg-black flex flex-col'}>
-                <div ref={roadRef} className={'flex overflow-x-scroll'}>
-                    <pre className={'text-[6px] text-white'}>
-                        {city}
-                    </pre>
-                    <pre className={'text-[6px] text-white'}>
-                        {city}
-                    </pre>
-                    <pre className={'text-[6px] text-white'}>
-                        {city}
-                    </pre>
-                    <pre className={'text-[6px] text-white'}>
-                        {city}
-                    </pre>
+            <div className={'h-3/5 bg-black flex flex-col relative'}>
+                <div ref={roadRef}  className={`flex transition w-fit duration-150 ease-linear`}>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
                 </div>
                 <hr className={'w-screen h-0.5 bg-white'}/>
-                <div className={'flex flex-col'}>
-                    <div ref={enemyRef} className={' transition-all duration-500 ease-linear'}>
+                <div className={'flex items-center flex-col'}>
+                    <div ref={enemyRef} className={'transition-all duration-500 ease-linear'}>
                         <Car speed={enemySpeed}/>
                     </div>
-                    <Car speed={playerSpeed}>
-                        <span className={'absolute bottom-full text-center left-0 w-1/2 border-white border bg-black text-white p-1 text-sm'}>You</span>
-                    </Car>
+                    <div ref={playerRef} className={'transition-all duration-1000 ease-linear'}>
+                        <Car speed={playerSpeed}>
+                            <span className={'absolute bottom-full text-center left-0 w-1/2 border-white border bg-black text-white p-1 text-sm'}>You</span>
+                        </Car>
+                    </div>
+
                 </div>
 
             </div>
@@ -264,7 +246,9 @@ const GameRoom = () => {
                 </div>
             </div>
             <button onClick={() => setIsModalOpen(true)} className={'mx-auto mb-10 grid place-items-center bg-red-600 rounded-xl w-1/5 py-5 border border-black'}><FaFlag className={'text-white text-5xl text-center'}/></button>
-            {isModalOpen && <SessionLineChar sessionData={sessionChartData}></SessionLineChar>}
+            {isModalOpen &&
+                <SessionLineChar sessionData={sessionChartData}></SessionLineChar>
+            }
         </motion.div>
     );
 };
