@@ -43,15 +43,15 @@ module.exports = {
         account: "url('/src/assets/account_bg.png')",
       },
       animation: {
-        scroll: "scroll 12s linear infinite",
+        scroll: "scroll 10s linear infinite",
       },
       keyframes: {
         scroll: {
           from: {
-            transform: "translateX(350%)",
+            transform: "translateX(600%)",
           },
           to: {
-            transform: "translateX(-350%)",
+            transform: "translateX(-600%)",
           },
         },
       },

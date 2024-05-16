@@ -48,16 +48,16 @@ const Home = () => {
       )}
 
       <div
-        className={
-          "inline-flex flex-row items-center w-full gap-5 h-32 bg-green-200 overflow-hidden"
-        }
+        className={`inline-flex flex-row items-center justify-around gap-5 h-32 ${themeConfig.accent} overflow-hidden`}
       >
         {games.length ? (
           games.map((game) => (
-            <div className="inline-flex flex-row gap-2 justify-center items-center w-full h-3/4 p-2 bg-green-700 text-white font-bold font-primary animate-scroll">
-              <p>Room name: {game.roomName}</p>
-              <p>Time: {game.time}</p>
-              <p>Speed: {game.speed}</p>
+            <div
+              className={`inline-flex flex-row gap-2 justify-around items-center w-fit px-5 py-2 ${themeConfig.secondary} text-white font-bold font-primary animate-scroll`}
+            >
+              <p className="text-nowrap">Room name: {game.roomName}</p>
+              <p className="text-nowrap">Time: {game.time}</p>
+              <p className="text-nowrap">Speed: {game.speed}</p>
             </div>
           ))
         ) : (
