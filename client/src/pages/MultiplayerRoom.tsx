@@ -96,7 +96,7 @@ const MultiplayerRoom = () => {
               "grow overflow-y-scroll scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-100"
             }
           >
-            <div className={"h-[3000px] flex flex-col gap-5"}>
+            <div className={"h-auto flex flex-col gap-5"}>
               <hr className="border-black" />
               {filteredData.length ? (
                 filteredData.map((room) => (
