@@ -5,6 +5,7 @@ import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
 import {FaFlag} from "react-icons/fa";
 import SessionLineChar, {SessionData} from "../components/SessionLineChar";
 import Car from "../components/Car";
+import {WSSUrl} from "../data/serverUrl";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
 
@@ -74,8 +75,16 @@ const GameRoom = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const sendMessage = (symbol: string, trueSymbol: string): void => {
-        if (ws) ws.send(JSON.stringify({sym: symbol, trueSym: trueSymbol}))
+        if (ws) {
+            console.log(ws)
+            const message = {
+                command: 'message',
+                identifier: JSON.stringify({channel: 'RaceChannel', id: 'RandomUserId', room_id: 'RandomRoomId', valid: symbol === trueSymbol})
+            };
+            ws.send(JSON.stringify(message));
+        }
     }
+
     useEffect(() => {
         setSessionChartData(prev => [...prev, {
             name: Math.abs(timer - timeDuration) + 's',
@@ -104,6 +113,25 @@ const GameRoom = () => {
             const child = Array.from(containerRef.current.children)[0];
             const {width: childWidth} = child.getBoundingClientRect();
             setCharsInARow(Math.round(containerWidth / childWidth))
+        }
+
+        const actionCableUrl = WSSUrl + '/cable';
+        const socket = new WebSocket(actionCableUrl);
+
+        socket.onopen = function(event) {
+            setWs(socket);
+
+            console.log('WebSocket connection opened');
+            const roomId = 9;
+            const message = {
+                command: 'subscribe',
+                identifier: JSON.stringify({ channel: 'RaceChannel', room_id: roomId })
+            };
+            socket.send(JSON.stringify(message));
+        };
+
+        socket.onmessage = (event) => {
+            // console.log('New massage : ', event.data);
         }
     }, [])
 
@@ -134,38 +162,6 @@ const GameRoom = () => {
 
         }
     }, [caret])
-
-
-    useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8080');
-
-        socket.onopen = () => {
-            setWs(socket);
-        };
-
-        socket.onmessage = (event) => {
-            const {owner, speed} = JSON.parse(event.data);
-            const botSpeed = Math.random() > 0.5 ? 2 : -2;
-            if (owner === 1) {
-                setPlayerSpeed(prev => prev + +speed < 0 ? 0 : prev + +speed);
-                setEnemySpeed(prev => prev + botSpeed < 0 ? 0 : prev + botSpeed);
-            } if (owner === 2) {
-                setEnemySpeed(prev => prev + +speed < 0 ? 0 : prev + +speed);
-            }
-        };
-
-        socket.onerror = (error) => {
-            alert('Web socket server is shut down, run server in src/mockupServer/mockupServer.js')
-            console.error('WebSocket error:', error);
-        };
-
-        return () => {
-            if (ws) {
-                ws.close();
-            }
-        };
-    }, []);
-
 
     return (
         <motion.div className={'absolute flex flex-col top-0 left-0 w-full h-full bg-white z-10 overflow-x-hidden'}
