@@ -1,10 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {pageVariants} from "../styles/variants";
 import {motion} from "framer-motion";
 import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
 import {FaFlag} from "react-icons/fa";
 import SessionLineChar, {SessionData} from "../components/SessionLineChar";
 import Car from "../components/Car";
+import {WSSUrl} from "../data/serverUrl";
+import consumer from "../cable";
+import {userContext} from "../context/UserContext";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
 
@@ -17,21 +20,21 @@ enum charStateEnum {
 const city =
     `
                                                                                                                                  /@@&
-                                                                                                                                &////#                ,                                                 
-                                                                        @                                                       &..../                ,                                                 
-                                                                      @@@                                                       &&&&&@                @                                                 
-                                                  #                *@@@@@                                                       &####%                @                                                 
-                                                  @              @@@@@@@@                                                       &    *               @@@                                                
-                                                  @             (@%&@%%@@                                                      @(@ ,@ @            @@@@@@@            @@                                
-                                    @            @@@            (@ ,@  @@                                                      @@@@@@@@            @@@@@@@          @@@@@                               
-                                   @@           @@@@@&          /@/(@//@@                                                      @(@ ,@ @          @@ %@.,@# @       &@@@@@&&                             
-                                  @@@@        %%@@@@@@%,        (@*(@**@@@@   @@@@@@@@                                 ,@&*@*&@@@@@@@@@@@@@@     @@ %@.,@# @       @ ,@ @ @  @@                         
-                              / ,@&(@/@@      @#######@*       /@@.*@.,@@###  @%/*#@@@     @@ @ @@                     ,@&*@*&@@(@ ,@ @..%@@     @@ %@.,@# @       @@@@@@@@  @@@@       @               
-                            @@@ ,@%*@ @@    ( @       @*    .@@@@@&&@&&@@@@@@@@%/*#@@@     @@ @ @@                     ,@&*@*&@@@@&@@&@  #@@     @@ %@..@% @///    @.,@ @.@   @,(@   *@@@  @#           
-           *@@        @   @@@@@ ,@%*@ @@    @ @#######@*    @@*  @ ,@  @@.. @@@%/*#@@@     @@ @ @@         @&#%%%@     ,@&*@*&@@(@.*@ @  #@@  @  @@ %@..@% @,,,.   @ ,@ @ @   @,(@  ****@  @#           
-           *@@@@     @@@  @ %&@ ,@%*@ @@   /#,@&&&&&&&@*    @@@@@@@@@@@@@&&&@@@%/*#@@@     @@ @ @@    @    @%#%%%@  @  ,@&*@*&@@%@/#@/@  #@@ @@@ @@ %@..@% @@@@@@@@@@@@@@@@   @,(@  .   @ &%%           
-  (        *@ *@    @%%%@ @ %&@ ,@%*@ @@@@@#%(@.......@*    @@/,,@ ,@  @@%%%@@@%/*#@@@     @@ @ @@   @@@   @&#%%%@  @  ,@&*@*&@@#@*(@*@  #@@%///@@@ %@..@% @///@,%@@#%@#@(@   @,(@  ****@ %%%           
-  #        *@.(@@,,*@%%%@ @ %&@ ,@%*@ @&%%@&&%@@@@@@@@@*%%% @@(,,@@@@@@@@   @@@%/*#@@@@@@  @@ @ @@#&/*@#/##@&#%%%@  @@@,@&*@*&@@(@ *@ @  #@@#,,,@@@ %@..@% @...@*%@@ ,@ @ @@@ @,(@@@@@@@@@&%%@          
+                                                                                                                                &////#                ,
+                                                                        @                                                       &..../                ,
+                                                                      @@@                                                       &&&&&@                @
+                                                  #                *@@@@@                                                       &####%                @
+                                                  @              @@@@@@@@                                                       &    *               @@@
+                                                  @             (@%&@%%@@                                                      @(@ ,@ @            @@@@@@@            @@
+                                    @            @@@            (@ ,@  @@                                                      @@@@@@@@            @@@@@@@          @@@@@
+                                   @@           @@@@@&          /@/(@//@@                                                      @(@ ,@ @          @@ %@.,@# @       &@@@@@&&
+                                  @@@@        %%@@@@@@%,        (@*(@**@@@@   @@@@@@@@                                 ,@&*@*&@@@@@@@@@@@@@@     @@ %@.,@# @       @ ,@ @ @  @@
+                              / ,@&(@/@@      @#######@*       /@@.*@.,@@###  @%/*#@@@     @@ @ @@                     ,@&*@*&@@(@ ,@ @..%@@     @@ %@.,@# @       @@@@@@@@  @@@@       @
+                            @@@ ,@%*@ @@    ( @       @*    .@@@@@&&@&&@@@@@@@@%/*#@@@     @@ @ @@                     ,@&*@*&@@@@&@@&@  #@@     @@ %@..@% @///    @.,@ @.@   @,(@   *@@@  @#
+           *@@        @   @@@@@ ,@%*@ @@    @ @#######@*    @@*  @ ,@  @@.. @@@%/*#@@@     @@ @ @@         @&#%%%@     ,@&*@*&@@(@.*@ @  #@@  @  @@ %@..@% @,,,.   @ ,@ @ @   @,(@  ****@  @#
+           *@@@@     @@@  @ %&@ ,@%*@ @@   /#,@&&&&&&&@*    @@@@@@@@@@@@@&&&@@@%/*#@@@     @@ @ @@    @    @%#%%%@  @  ,@&*@*&@@%@/#@/@  #@@ @@@ @@ %@..@% @@@@@@@@@@@@@@@@   @,(@  .   @ &%%
+  (        *@ *@    @%%%@ @ %&@ ,@%*@ @@@@@#%(@.......@*    @@/,,@ ,@  @@%%%@@@%/*#@@@     @@ @ @@   @@@   @&#%%%@  @  ,@&*@*&@@#@*(@*@  #@@%///@@@ %@..@% @///@,%@@#%@#@(@   @,(@  ****@ %%%
+  #        *@.(@@,,*@%%%@ @ %&@ ,@%*@ @&%%@&&%@@@@@@@@@*%%% @@(,,@@@@@@@@   @@@%/*#@@@@@@  @@ @ @@#&/*@#/##@&#%%%@  @@@,@&*@*&@@(@ *@ @  #@@#,,,@@@ %@..@% @...@*%@@ ,@ @ @@@ @,(@@@@@@@@@&%%@
   #       @%@%&@@&&&@%%%@@@*&&@@@@%*@ @&%%@&&%@#######@@#%%@@@#((@ ,@  @@###@@@%/*#@@@ ,@@@@@ @ @@.@. @/ @#@&#%%%@@@@@@,@&*@*&@@&@#%@#@  #@@#***@@@ %@..@% @@@@@(&@@(#@(@(@@@ @,(@@@@@@@@@&%%@       @@@
   .      ,@&@%&@@..,@%%%@@@(&@@@@@%*@ @(  @@@@@       @@#%%@@@*  @@@@@@@@%%%@@@%/*#@@@@@@@@@@ @ @@.@,.@(.@&@&#%%%@@@@@#,@&*@*&@@(@ ,@ @..%@@(...@@@ %@..@% @***@&@@@@@@@@@@@@ @,(@@@&&&%@@&%%@@%&@   @@@
   %      @@@@,(@@%%%@%%#@@@&@@@@@@%*@ @@@@@@@@@%%%%%%%@@##%@@@@@@@ ,@  @@.. @@@&##%@@@ ,@@@@@ @ @@*@%#@&#@@@&#%%%@@@@@#,@&*@*&@@@@&&@&@**&@@#***@@@.%@,,@%.@,,,@@@@@ ,@ @ @@@.@*#@@@,...@@&%%@@@@@...@@@
@@ -39,6 +42,7 @@ const city =
   #. @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*,@(,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@**@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     `
+
 
 const charStateMap = {
     [charStateEnum.CORRECT]: 'text-green-500',
@@ -50,6 +54,7 @@ const plaintext = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
 const timeDuration = 30;
 const GameRoom = () => {
 
+    const {userId} = useContext(userContext);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const roadRef = useRef<HTMLDivElement>(null);
     const enemyRef = useRef<HTMLDivElement>(null);
@@ -58,7 +63,7 @@ const GameRoom = () => {
 
     const [fromLeft, setFromLeft] = useState(0);
     const [enemyFromLeft, setEnemyFromLeft] = useState(0);
-    const [ws, setWs] = useState<WebSocket | null>(null);
+    const [ws, setWs] = useState<any | null>(null);
     const [caret, setCaret] = useState(0);
     const [text, setText] = useState(plaintext.split('').map(char => ({value: char, state: charStateEnum.NEUTRAL})));
 
@@ -74,8 +79,19 @@ const GameRoom = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const sendMessage = (symbol: string, trueSymbol: string): void => {
-        if (ws) ws.send(JSON.stringify({sym: symbol, trueSym: trueSymbol}))
+        if (ws) {
+            ws.perform('speed', {user_id: userId, room_id: 9, valid: symbol === trueSymbol});
+        }
     }
+
+    useEffect(() => {
+        if (ws) {
+            setInterval(() =>  {
+                ws.perform('speed_slow', {user_id: userId, room_id: 9});
+            }, 100);
+        }
+    }, [ws])
+
     useEffect(() => {
         setSessionChartData(prev => [...prev, {
             name: Math.abs(timer - timeDuration) + 's',
@@ -83,6 +99,7 @@ const GameRoom = () => {
             accuracy: Math.round(sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001) * 100) / 100
         }])
     }, [timer])
+
 
     useEffect(() => {
         const timerInterval = setInterval((() => {
@@ -105,6 +122,28 @@ const GameRoom = () => {
             const {width: childWidth} = child.getBoundingClientRect();
             setCharsInARow(Math.round(containerWidth / childWidth))
         }
+
+        const subscription = consumer.subscriptions.create(
+            { channel: "RaceChannel", room_id: 9 },
+            {
+                connected() {
+                    console.log(`Connected to RaceChannel for room ${9}`);
+                },
+
+                disconnected() {
+                    console.log(`Disconnected from RaceChannel for room ${9}`);
+                },
+
+                received(data: any) {
+                    const {user_id, speed_change} = data;
+                    setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                }
+            }
+        );
+        setWs(subscription);
+        return () => {
+            subscription.unsubscribe();
+        };
     }, [])
 
     useEffect(() => {
@@ -134,38 +173,6 @@ const GameRoom = () => {
 
         }
     }, [caret])
-
-
-    useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8080');
-
-        socket.onopen = () => {
-            setWs(socket);
-        };
-
-        socket.onmessage = (event) => {
-            const {owner, speed} = JSON.parse(event.data);
-            const botSpeed = Math.random() > 0.5 ? 2 : -2;
-            if (owner === 1) {
-                setPlayerSpeed(prev => prev + +speed < 0 ? 0 : prev + +speed);
-                setEnemySpeed(prev => prev + botSpeed < 0 ? 0 : prev + botSpeed);
-            } if (owner === 2) {
-                setEnemySpeed(prev => prev + +speed < 0 ? 0 : prev + +speed);
-            }
-        };
-
-        socket.onerror = (error) => {
-            alert('Web socket server is shut down, run server in src/mockupServer/mockupServer.js')
-            console.error('WebSocket error:', error);
-        };
-
-        return () => {
-            if (ws) {
-                ws.close();
-            }
-        };
-    }, []);
-
 
     return (
         <motion.div className={'absolute flex flex-col top-0 left-0 w-full h-full bg-white z-10 overflow-x-hidden'}
