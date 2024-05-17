@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_02_223931) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_15_133416) do
+  create_table "rooms", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.integer "players_count", default: 0
+    t.boolean "game_started", default: false
+    t.string "password"
+    t.boolean "password_status", default: false
+    t.boolean "game_lock_status", default: false
+    t.text "user_ids", default: "[]"
+  end
+
   create_table "users", force: :cascade do |t|
     t.text "login"
     t.text "password_digest"
@@ -21,7 +33,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_02_223931) do
     t.integer "pbsymbols"
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
-    t.boolean "email_auto"
+    t.boolean "email_auto", default: false
+    t.string "uid"
+    t.string "token_email"
+    t.string "token_password"
+    t.string "jwt"
   end
 
 end
