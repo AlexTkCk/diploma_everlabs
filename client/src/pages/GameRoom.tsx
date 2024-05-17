@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {pageVariants} from "../styles/variants";
 import {motion} from "framer-motion";
 import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
@@ -6,6 +6,8 @@ import {FaFlag} from "react-icons/fa";
 import SessionLineChar, {SessionData} from "../components/SessionLineChar";
 import Car from "../components/Car";
 import {WSSUrl} from "../data/serverUrl";
+import consumer from "../cable";
+import {userContext} from "../context/UserContext";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
 
@@ -18,21 +20,21 @@ enum charStateEnum {
 const city =
     `
                                                                                                                                  /@@&
-                                                                                                                                &////#                ,                                                 
-                                                                        @                                                       &..../                ,                                                 
-                                                                      @@@                                                       &&&&&@                @                                                 
-                                                  #                *@@@@@                                                       &####%                @                                                 
-                                                  @              @@@@@@@@                                                       &    *               @@@                                                
-                                                  @             (@%&@%%@@                                                      @(@ ,@ @            @@@@@@@            @@                                
-                                    @            @@@            (@ ,@  @@                                                      @@@@@@@@            @@@@@@@          @@@@@                               
-                                   @@           @@@@@&          /@/(@//@@                                                      @(@ ,@ @          @@ %@.,@# @       &@@@@@&&                             
-                                  @@@@        %%@@@@@@%,        (@*(@**@@@@   @@@@@@@@                                 ,@&*@*&@@@@@@@@@@@@@@     @@ %@.,@# @       @ ,@ @ @  @@                         
-                              / ,@&(@/@@      @#######@*       /@@.*@.,@@###  @%/*#@@@     @@ @ @@                     ,@&*@*&@@(@ ,@ @..%@@     @@ %@.,@# @       @@@@@@@@  @@@@       @               
-                            @@@ ,@%*@ @@    ( @       @*    .@@@@@&&@&&@@@@@@@@%/*#@@@     @@ @ @@                     ,@&*@*&@@@@&@@&@  #@@     @@ %@..@% @///    @.,@ @.@   @,(@   *@@@  @#           
-           *@@        @   @@@@@ ,@%*@ @@    @ @#######@*    @@*  @ ,@  @@.. @@@%/*#@@@     @@ @ @@         @&#%%%@     ,@&*@*&@@(@.*@ @  #@@  @  @@ %@..@% @,,,.   @ ,@ @ @   @,(@  ****@  @#           
-           *@@@@     @@@  @ %&@ ,@%*@ @@   /#,@&&&&&&&@*    @@@@@@@@@@@@@&&&@@@%/*#@@@     @@ @ @@    @    @%#%%%@  @  ,@&*@*&@@%@/#@/@  #@@ @@@ @@ %@..@% @@@@@@@@@@@@@@@@   @,(@  .   @ &%%           
-  (        *@ *@    @%%%@ @ %&@ ,@%*@ @@@@@#%(@.......@*    @@/,,@ ,@  @@%%%@@@%/*#@@@     @@ @ @@   @@@   @&#%%%@  @  ,@&*@*&@@#@*(@*@  #@@%///@@@ %@..@% @///@,%@@#%@#@(@   @,(@  ****@ %%%           
-  #        *@.(@@,,*@%%%@ @ %&@ ,@%*@ @&%%@&&%@@@@@@@@@*%%% @@(,,@@@@@@@@   @@@%/*#@@@@@@  @@ @ @@#&/*@#/##@&#%%%@  @@@,@&*@*&@@(@ *@ @  #@@#,,,@@@ %@..@% @...@*%@@ ,@ @ @@@ @,(@@@@@@@@@&%%@          
+                                                                                                                                &////#                ,
+                                                                        @                                                       &..../                ,
+                                                                      @@@                                                       &&&&&@                @
+                                                  #                *@@@@@                                                       &####%                @
+                                                  @              @@@@@@@@                                                       &    *               @@@
+                                                  @             (@%&@%%@@                                                      @(@ ,@ @            @@@@@@@            @@
+                                    @            @@@            (@ ,@  @@                                                      @@@@@@@@            @@@@@@@          @@@@@
+                                   @@           @@@@@&          /@/(@//@@                                                      @(@ ,@ @          @@ %@.,@# @       &@@@@@&&
+                                  @@@@        %%@@@@@@%,        (@*(@**@@@@   @@@@@@@@                                 ,@&*@*&@@@@@@@@@@@@@@     @@ %@.,@# @       @ ,@ @ @  @@
+                              / ,@&(@/@@      @#######@*       /@@.*@.,@@###  @%/*#@@@     @@ @ @@                     ,@&*@*&@@(@ ,@ @..%@@     @@ %@.,@# @       @@@@@@@@  @@@@       @
+                            @@@ ,@%*@ @@    ( @       @*    .@@@@@&&@&&@@@@@@@@%/*#@@@     @@ @ @@                     ,@&*@*&@@@@&@@&@  #@@     @@ %@..@% @///    @.,@ @.@   @,(@   *@@@  @#
+           *@@        @   @@@@@ ,@%*@ @@    @ @#######@*    @@*  @ ,@  @@.. @@@%/*#@@@     @@ @ @@         @&#%%%@     ,@&*@*&@@(@.*@ @  #@@  @  @@ %@..@% @,,,.   @ ,@ @ @   @,(@  ****@  @#
+           *@@@@     @@@  @ %&@ ,@%*@ @@   /#,@&&&&&&&@*    @@@@@@@@@@@@@&&&@@@%/*#@@@     @@ @ @@    @    @%#%%%@  @  ,@&*@*&@@%@/#@/@  #@@ @@@ @@ %@..@% @@@@@@@@@@@@@@@@   @,(@  .   @ &%%
+  (        *@ *@    @%%%@ @ %&@ ,@%*@ @@@@@#%(@.......@*    @@/,,@ ,@  @@%%%@@@%/*#@@@     @@ @ @@   @@@   @&#%%%@  @  ,@&*@*&@@#@*(@*@  #@@%///@@@ %@..@% @///@,%@@#%@#@(@   @,(@  ****@ %%%
+  #        *@.(@@,,*@%%%@ @ %&@ ,@%*@ @&%%@&&%@@@@@@@@@*%%% @@(,,@@@@@@@@   @@@%/*#@@@@@@  @@ @ @@#&/*@#/##@&#%%%@  @@@,@&*@*&@@(@ *@ @  #@@#,,,@@@ %@..@% @...@*%@@ ,@ @ @@@ @,(@@@@@@@@@&%%@
   #       @%@%&@@&&&@%%%@@@*&&@@@@%*@ @&%%@&&%@#######@@#%%@@@#((@ ,@  @@###@@@%/*#@@@ ,@@@@@ @ @@.@. @/ @#@&#%%%@@@@@@,@&*@*&@@&@#%@#@  #@@#***@@@ %@..@% @@@@@(&@@(#@(@(@@@ @,(@@@@@@@@@&%%@       @@@
   .      ,@&@%&@@..,@%%%@@@(&@@@@@%*@ @(  @@@@@       @@#%%@@@*  @@@@@@@@%%%@@@%/*#@@@@@@@@@@ @ @@.@,.@(.@&@&#%%%@@@@@#,@&*@*&@@(@ ,@ @..%@@(...@@@ %@..@% @***@&@@@@@@@@@@@@ @,(@@@&&&%@@&%%@@%&@   @@@
   %      @@@@,(@@%%%@%%#@@@&@@@@@@%*@ @@@@@@@@@%%%%%%%@@##%@@@@@@@ ,@  @@.. @@@&##%@@@ ,@@@@@ @ @@*@%#@&#@@@&#%%%@@@@@#,@&*@*&@@@@&&@&@**&@@#***@@@.%@,,@%.@,,,@@@@@ ,@ @ @@@.@*#@@@,...@@&%%@@@@@...@@@
@@ -40,6 +42,7 @@ const city =
   #. @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*,@(,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@**@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     `
+
 
 const charStateMap = {
     [charStateEnum.CORRECT]: 'text-green-500',
@@ -51,6 +54,7 @@ const plaintext = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed 
 const timeDuration = 30;
 const GameRoom = () => {
 
+    const {userId} = useContext(userContext);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const roadRef = useRef<HTMLDivElement>(null);
     const enemyRef = useRef<HTMLDivElement>(null);
@@ -59,7 +63,7 @@ const GameRoom = () => {
 
     const [fromLeft, setFromLeft] = useState(0);
     const [enemyFromLeft, setEnemyFromLeft] = useState(0);
-    const [ws, setWs] = useState<WebSocket | null>(null);
+    const [ws, setWs] = useState<any | null>(null);
     const [caret, setCaret] = useState(0);
     const [text, setText] = useState(plaintext.split('').map(char => ({value: char, state: charStateEnum.NEUTRAL})));
 
@@ -76,14 +80,17 @@ const GameRoom = () => {
 
     const sendMessage = (symbol: string, trueSymbol: string): void => {
         if (ws) {
-            console.log(ws)
-            const message = {
-                command: 'message',
-                identifier: JSON.stringify({channel: 'RaceChannel', id: 'RandomUserId', room_id: 'RandomRoomId', valid: symbol === trueSymbol})
-            };
-            ws.send(JSON.stringify(message));
+            ws.perform('speed', {user_id: userId, room_id: 9, valid: symbol === trueSymbol});
         }
     }
+
+    useEffect(() => {
+        if (ws) {
+            setInterval(() =>  {
+                ws.perform('speed_slow', {user_id: userId, room_id: 9});
+            }, 100);
+        }
+    }, [ws])
 
     useEffect(() => {
         setSessionChartData(prev => [...prev, {
@@ -92,6 +99,7 @@ const GameRoom = () => {
             accuracy: Math.round(sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001) * 100) / 100
         }])
     }, [timer])
+
 
     useEffect(() => {
         const timerInterval = setInterval((() => {
@@ -115,24 +123,27 @@ const GameRoom = () => {
             setCharsInARow(Math.round(containerWidth / childWidth))
         }
 
-        const actionCableUrl = WSSUrl + '/cable';
-        const socket = new WebSocket(actionCableUrl);
+        const subscription = consumer.subscriptions.create(
+            { channel: "RaceChannel", room_id: 9 },
+            {
+                connected() {
+                    console.log(`Connected to RaceChannel for room ${9}`);
+                },
 
-        socket.onopen = function(event) {
-            setWs(socket);
+                disconnected() {
+                    console.log(`Disconnected from RaceChannel for room ${9}`);
+                },
 
-            console.log('WebSocket connection opened');
-            const roomId = 9;
-            const message = {
-                command: 'subscribe',
-                identifier: JSON.stringify({ channel: 'RaceChannel', room_id: roomId })
-            };
-            socket.send(JSON.stringify(message));
+                received(data: any) {
+                    const {user_id, speed_change} = data;
+                    setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                }
+            }
+        );
+        setWs(subscription);
+        return () => {
+            subscription.unsubscribe();
         };
-
-        socket.onmessage = (event) => {
-            // console.log('New massage : ', event.data);
-        }
     }, [])
 
     useEffect(() => {
