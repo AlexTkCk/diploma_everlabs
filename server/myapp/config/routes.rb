@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   post '/user/signup', to: 'users#signup'
-  get 'testing_pines', to: 'users#test_pines'
   post '/user/login', to: 'users#login'
   post '/re-entry', to: 're_entry#return_id'
   get  '/register', to: 'users#register'
@@ -12,6 +11,11 @@ Rails.application.routes.draw do
   get '/password_recovery/:token/:id', to: 'password_recovery#add_new_pass'
   post '/password/change/:token/:id', to: 'password_recovery#change_password'
   get '/test', to: 're_entry#testing'
+  post '/createroom', to: 'room_action#entering_own_room'
+  post '/leave_room', to: 'room_action#leave_room'
+  get '/get_info_rooms', to: 'room_action#room_info'
+  get '/text_race', to: 'room_action#text_for_race'
+  mount ActionCable.server => '/cable'
 
 
 

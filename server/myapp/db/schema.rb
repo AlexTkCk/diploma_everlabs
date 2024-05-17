@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_15_110902) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_15_133416) do
   create_table "rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_110902) do
     t.string "password"
     t.boolean "password_status", default: false
     t.boolean "game_lock_status", default: false
-    t.string "id_user_in_room"
+    t.text "user_ids", default: "[]"
   end
 
   create_table "users", force: :cascade do |t|

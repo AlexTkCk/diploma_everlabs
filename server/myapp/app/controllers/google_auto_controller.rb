@@ -1,4 +1,5 @@
 class GoogleAutoController < ApplicationController
+  require 'faker'
   def reg
     auth = request.env['omniauth.auth']
     email = auth.info.email
@@ -11,8 +12,15 @@ class GoogleAutoController < ApplicationController
       redirect_to "http://localhost:3000/login/#{user.id}/#{token}", allow_other_host: true
     else
       user = User.new(login: email, password: "pDrmCWs8fHG4J2WDwsf8!", email_auto: 1, uid: uid)
+      user.nickname= Faker::Internet.unique.username
+
+
 
       if user.save
+        new_room=Room.create(name: Faker::Lorem.unique.words(number: 2).join(' '), id: user.id, text: Faker::Lorem.paragraph(sentence_count: 20) )
+        new_room.save
+
+        token=generate_token(user.id)
         redirect_to "http://localhost:3000/login/#{user.id}/#{token}", allow_other_host: true
       else
         render json: { error: 'An error occurred while creating the user' }, status: :unprocessable_entity

@@ -5,11 +5,6 @@ class UsersController < ApplicationController
     render 'register'
   end
 
-
-  def test_pines
-    render json: { error: 'Invalid email format', status: "1" }, status: :unprocessable_entity
-    render json: { error: 'Invalid em222222il format', status: "1" }, status: :unprocessable_entity
-  end
   def signup
     data = JSON.parse(request.body.read)
     login = data['login']
@@ -36,7 +31,7 @@ class UsersController < ApplicationController
       new_user.nickname= Faker::Internet.unique.username
 
       if new_user.save
-        new_room=Room.create(name: Faker::Lorem.unique.words(number: 2).join(' '), id: new_user.id )
+        new_room=Room.create(name: Faker::Lorem.unique.words(number: 2).join(' '), id: new_user.id, text: Faker::Lorem.paragraph(sentence_count: 20) )
         new_room.save
         token = generate_token(new_user.id)
         render json: { message: 'User created successfully', status: "3", id:new_user.id, token: token }
