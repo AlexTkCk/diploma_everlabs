@@ -42,23 +42,12 @@ module.exports = {
       backgroundImage: {
         account: "url('/src/assets/account_bg.png')",
       },
-      animation: {
-        scroll: "scroll 10s linear infinite",
-      },
       keyframes: {
-        scroll: {
-          from: {
-            transform: "translateX(600%)",
-          },
-          to: {
-            transform: "translateX(-600%)",
-          },
-        },
         speed: {
-          '0%': { paddingLeft: '100%', opacity: 0 },
-          '75%': { opacity: 1 },
-          '100%': { paddingLeft: '0', opacity: 0 },
-        }
+          "0%": { paddingLeft: "100%", opacity: 0 },
+          "75%": { opacity: 1 },
+          "100%": { paddingLeft: "0", opacity: 0 },
+        },
       },
     },
   },

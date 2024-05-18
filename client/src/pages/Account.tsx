@@ -136,8 +136,12 @@ const Account = () => {
             >
               Edit
             </Button>
+            <span className="absolute bottom-5 left-1/2 -translate-x-1/2 animate-pulse text-lg">
+              Double click to see backside
+            </span>
           </div>
         </div>
+
         <div
           className="absolute h-full w-full flex flex-col gap-8 border-2 border-slate-900 p-8 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat"
           style={{
