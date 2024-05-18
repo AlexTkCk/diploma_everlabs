@@ -21,7 +21,7 @@ const Account = () => {
 
   const { themeConfig } = useContext(themeContext);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isShow, setIsShow] = useState(false);
+  const [flipped, setFlipped] = useState(false);
 
   const [data, setData] = useState({
     name: "John Doe",
@@ -40,8 +40,8 @@ const Account = () => {
   const closeEditModal = () => {
     setIsEditModalOpen(false);
   };
-  const handleShowCard = () => {
-    setIsShow(!isShow);
+  const handleFlip = () => {
+    setFlipped(!flipped);
   };
 
   const handleSave = (
@@ -83,59 +83,92 @@ const Account = () => {
         Log out
       </button>
 
-      <div className="relative h-full w-3/4 flex flex-col gap-8 border-2 border-slate-900 p-8 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat hover:">
-        <h2 className="text-5xl">Driver Licence</h2>
-        <div className="h-full flex flex-row gap-10">
-          <img
-            className="h-[80%] rounded-md border-2 border-slate-900"
-            src={data.profileImg}
-            alt="user_avatar"
-          />
-          {isShow ? (
-            <>
-              <div className="flex flex-col gap-5 font-primary text-xl">
-                <p>
-                  <span className="font-bold font-primary">Name:</span>
-                  {userData?.name}
-                </p>
-                <p>
-                  {" "}
-                  <span className="font-bold">Number of races:</span>{" "}
-                  {data.numberOfRaces}
-                </p>
-                <p>
-                  <span className="font-bold">Best time in the race:</span>{" "}
-                  {data.bestTime}
-                </p>
-                <p>
-                  <span className="font-bold">Place in the ranking table:</span>{" "}
-                  {data.placeInRanking}
-                </p>
-              </div>
-              <p className="absolute bottom-3 right-3 text-center text-md font-bold ">
-                Started playing: <br /> {data.startedPlaying}
+      <motion.div
+        className="relative h-full w-3/4"
+        style={{
+          position: "relative",
+          transformStyle: "preserve-3d",
+          boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
+        }}
+        animate={{
+          rotateY: flipped ? 180 : 0,
+        }}
+        transition={{
+          duration: 0.6,
+        }}
+        onDoubleClick={handleFlip}
+      >
+        <div className="absolute h-full w-full flex flex-col gap-8 border-2 border-slate-900 p-8 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat">
+          <h2 className="text-5xl">Driver Licence</h2>
+          <div className="h-full flex flex-row gap-10">
+            <img
+              className="h-[80%] rounded-md border-2 border-slate-900"
+              src={data.profileImg}
+              alt="user_avatar"
+            />
+
+            <div className="flex flex-col h-[80%] justify-center gap-5 font-primary text-xl">
+              <p>
+                <span className="font-bold font-primary">Name:</span>
+                {userData?.name}
               </p>
-            </>
-          ) : (
-            <p className="text-xl text-justify w-2/4 scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-300">
+              <p>
+                {" "}
+                <span className="font-bold">Number of races:</span>{" "}
+                {data.numberOfRaces}
+              </p>
+              <p>
+                <span className="font-bold">Best time in the race:</span>{" "}
+                {data.bestTime}
+              </p>
+              <p>
+                <span className="font-bold">Place in the ranking table:</span>{" "}
+                {data.placeInRanking}
+              </p>
+            </div>
+            <p className="absolute bottom-3 right-3 text-center text-md font-bold ">
+              Started playing: <br /> {data.startedPlaying}
+            </p>
+
+            <Button
+              buttonClassName={`absolute top-5 right-5 bg-slate-200 hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
+              handler={openEditModal}
+            >
+              Edit
+            </Button>
+            <span className="absolute bottom-5 left-1/2 -translate-x-1/2 animate-pulse text-lg">
+              Double click to see backside
+            </span>
+          </div>
+        </div>
+
+        <div
+          className="absolute h-full w-full flex flex-col gap-8 border-2 border-slate-900 p-8 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat"
+          style={{
+            backfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+          }}
+        >
+          <h2 className="text-5xl">Driver Licence</h2>
+          <div className="h-full flex flex-row gap-10 ">
+            <img
+              className="h-[80%] rounded-md border-2 border-slate-900"
+              src={data.profileImg}
+              alt="user_avatar"
+            />
+            <p className="h-[80%] text-xl text-justify w-2/4 scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-300">
               <span className="font-bold">About me:</span> {data.about}
             </p>
-          )}
 
-          <Button
-            buttonClassName={`absolute top-5 right-5 bg-slate-200 hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
-            handler={openEditModal}
-          >
-            Edit
-          </Button>
-          <button
-            className="absolute right-2 top-1/2 bg-green-500 text-white text-lg font-primary h-12 w-fit p-2 transition-all duration-300 hover:shadow-buttonHover_md hover:shadow-green-700"
-            onClick={handleShowCard}
-          >
-            Show about
-          </button>
+            <Button
+              buttonClassName={`absolute top-5 right-5 bg-slate-200 hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
+              handler={openEditModal}
+            >
+              Edit
+            </Button>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       <EditModal
         isOpen={isEditModalOpen}
