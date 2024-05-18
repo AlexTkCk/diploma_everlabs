@@ -13,11 +13,11 @@ const Account = () => {
   const { userData, setUserId, setUserData } = useContext(userContext);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!userData) {
-  //     navigate("/login");
-  //   }
-  // }, [userData]);
+  useEffect(() => {
+    if (!userData) {
+      navigate("/login");
+    }
+  }, [userData]);
 
   const { themeConfig } = useContext(themeContext);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
