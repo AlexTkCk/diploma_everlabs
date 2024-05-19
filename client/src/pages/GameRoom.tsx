@@ -60,7 +60,6 @@ const GameRoom = () => {
     const enemyRef = useRef<HTMLDivElement>(null);
     const playerRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-
     const [fromLeft, setFromLeft] = useState(0);
     const [enemyFromLeft, setEnemyFromLeft] = useState(0);
     const [ws, setWs] = useState<any | null>(null);
@@ -136,7 +135,10 @@ const GameRoom = () => {
 
                 received(data: any) {
                     const {user_id, speed_change} = data;
-                    setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                    if (user_id === userId)
+                        setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                    else
+                        setEnemySpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
                 }
             }
         );
