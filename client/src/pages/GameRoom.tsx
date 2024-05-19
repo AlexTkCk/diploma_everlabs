@@ -149,9 +149,11 @@ const GameRoom = () => {
     }, [])
 
     useEffect(() => {
-        if (roadRef.current) {
+        if (roadRef.current && enemyRef.current) {
             setFromLeft(prev => prev + playerSpeed);
             roadRef.current.style.marginLeft = '-' + fromLeft + 'px';
+            setEnemyFromLeft(prev => prev + enemySpeed - playerSpeed);
+            enemyRef.current.style.marginLeft = enemyFromLeft + 'px';
         }
     }, [playerSpeed]);
 
