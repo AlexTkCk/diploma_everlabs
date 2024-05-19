@@ -24,6 +24,7 @@ export const userContext = createContext<TUserContext>({
 const UserContext = ({children}: TUserContextProps) => {
     const [userId, setUserId] = useState(uuid4());
     const [userData, setUserData] = useState<TUserData>(null);
+    const [isFetching, setIsFetching] = useState(true);
 
     useEffect(() => {
         const jwt = localStorage.getItem('jwt');
@@ -41,9 +42,13 @@ const UserContext = ({children}: TUserContextProps) => {
                 setUserData({
                     name: data.name,
                 })
+                setIsFetching(false);
             })
         }
     }, []);
+
+    if (isFetching)
+        return <h1>Is Fetching User Data</h1>
 
     return (
         <userContext.Provider value={{userId, userData, setUserId, setUserData}}>
