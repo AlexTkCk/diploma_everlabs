@@ -1,2 +1,2 @@
-export const serverUrl = 'https://8a45-78-137-13-80.ngrok-free.app'
-export const WSSUrl = 'wss://8a45-78-137-13-80.ngrok-free.app'
+export const serverUrl = 'https://6be3-91-244-4-141.ngrok-free.app'
+export const WSSUrl = 'wss://6be3-91-244-4-141.ngrok-free.app'
