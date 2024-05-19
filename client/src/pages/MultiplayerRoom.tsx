@@ -1,44 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useContext} from "react";
 import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
 import Checkbox from "../components/CheckBox";
 import RowMp from "../components/RowMp";
-import dataMp from "../data/multiplayerData.json";
 import MPModal from "../components/MultiplayerModal";
+import {serverUrl} from "../data/serverUrl";
+import Button from "../components/Button";
+import {userContext} from "../context/UserContext";
+
+export type TRoom = {
+  id: string,
+  name: string,
+  players_count: 1,
+  password_status: boolean,
+  game_lock_status: boolean,
+}
 
 const MultiplayerRoom = () => {
-  const [data, setData] = useState(dataMp);
+  const [data, setData] = useState<TRoom[]>([]);
   const [searchData, setSearchData] = useState("");
   const [sortByPassword, setSortByPassword] = useState(false);
   const [sortByFullRoom, setSortByFullRoom] = useState(false);
   const [sortByLock, setSortByLock] = useState(false);
 
-  const [initialData, setInitialData] = useState(dataMp);
-
   const [activeRoom, setActiveRoom] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const {userId} = useContext(userContext);
+
+  useEffect(() => {
+    fetch(serverUrl + '/get_info_rooms', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
+        'Accept': 'application/json',
+      },
+    }).then(res => res.json()).then(data => {
+      setData(data)
+    })
+  }, []);
 
   const handleSort = (sortBy: string) => {
     let newData = [...data];
 
     if (sortBy === "password") {
       newData = sortByPassword
-        ? newData.sort((a) => (a.password ? 1 : -1))
-        : newData.sort((a) => (a.password ? -1 : 1));
+        ? newData.sort((a) => (a.password_status ? 1 : -1))
+        : newData.sort((a) => (a.password_status ? -1 : 1));
       setSortByPassword(!sortByPassword);
       setSortByFullRoom(false);
       setSortByLock(false);
     } else if (sortBy === "fullRoom") {
       newData = sortByFullRoom
-        ? newData.sort((a, b) => a.players.amount - b.players.amount)
-        : newData.sort((a, b) => b.players.amount - a.players.amount);
+        ? newData.sort((a, b) => a.players_count - b.players_count)
+        : newData.sort((a, b) => b.players_count - a.players_count);
       setSortByFullRoom(!sortByFullRoom);
       setSortByPassword(false);
       setSortByLock(false);
     } else if (sortBy === "lock") {
       newData = sortByLock
-        ? newData.sort((a) => (a.password ? 1 : -1))
-        : newData.sort((a) => (a.password ? -1 : 1));
+        ? newData.sort((a) => (a.password_status ? 1 : -1))
+        : newData.sort((a) => (a.password_status ? -1 : 1));
       setSortByLock(!sortByLock);
       setSortByPassword(false);
       setSortByFullRoom(false);
@@ -62,10 +85,6 @@ const MultiplayerRoom = () => {
     room.name.toLowerCase().includes(searchData.toLowerCase())
   );
 
-  useEffect(() => {
-    setInitialData(dataMp);
-    setData(dataMp);
-  }, []);
   return (
     <motion.div
       className={"grow overflow-y-hidden flex flex-col px-5 py-3"}
@@ -74,12 +93,29 @@ const MultiplayerRoom = () => {
       animate={"animate"}
       exit={"exit"}
     >
-      <input
-        placeholder="Find a room"
-        type="text"
-        onChange={handleSearch}
-        className="w-1/4 p-2 mx-auto mb-5 border-2 border-black rounded-2xl"
-      />
+
+
+      <div className={'flex'}>
+        <input
+            placeholder="Find a room"
+            type="text"
+            onChange={handleSearch}
+            className="w-1/4 p-2 mx-auto mb-5 border-2 border-black rounded-2xl"
+        />
+        <Button handler={() => {
+          fetch(serverUrl + '/enter_own_room', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'ngrok-skip-browser-warning': 'true',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({id: userId})
+          }).then(res => res.json()).then(data => {
+            console.log(data)
+          })
+        }}>Create room</Button>
+      </div>
 
       <div className="flex flex-row gap-10 w-full grow font-secondary min-h-0">
         <div className="w-3/4 h-full border-2 border-black flex flex-col rounded-2xl py-5 px-2">
