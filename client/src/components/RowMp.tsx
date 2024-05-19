@@ -1,17 +1,13 @@
-import React, { ReactNode } from "react";
+import React, {ReactNode, useContext} from "react";
 import { ImCheckboxChecked } from "react-icons/im";
 import { FaLock } from "react-icons/fa6";
 import { FaLockOpen } from "react-icons/fa6";
+import {TRoom} from "../pages/MultiplayerRoom";
+import {userContext} from "../context/UserContext";
+import {serverUrl} from "../data/serverUrl";
+
 type TRowMp = {
-  dataMp: {
-    id: number;
-    name: string;
-    players: {
-      amount: number;
-      totalAmount: number;
-    };
-    password: boolean;
-  };
+  dataMp: TRoom;
   children?: ReactNode | ReactNode[];
   setActiveRoom: (roomId: number) => void;
   handler: () => void;
@@ -23,11 +19,25 @@ const RowMp: React.FC<TRowMp> = ({
   setActiveRoom,
   handler,
 }) => {
+
+  const {userId} = useContext(userContext);
+
   const handleRowClick = () => {
     if (handler) {
       handler();
     }
-    setActiveRoom(dataMp.id);
+
+    fetch(serverUrl + '/enter_room', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({id: userId, room_id: dataMp.id})
+    }).then(res => res.json()).then(data => {
+      console.log(data)
+    })
   };
 
   return (
@@ -38,15 +48,15 @@ const RowMp: React.FC<TRowMp> = ({
       <span className="w-1/5 ">{dataMp.id}</span>
       <span className="w-2/5">{dataMp.name}</span>
       <span className="w-1/5">
-        {dataMp.players.amount} / {dataMp.players.totalAmount}
+        {dataMp.players_count} / 2
       </span>
       <span className="w-1/5">
-        {dataMp.password ? (
+        {dataMp.password_status ? (
           <ImCheckboxChecked className="mx-auto text-3xl h-full" />
         ) : null}
       </span>
       <span className="w-1/5 ">
-        {dataMp.password ? (
+        {dataMp.password_status ? (
           <FaLock className="text-3xl mx-auto h-full" />
         ) : (
           <FaLockOpen className="text-3xl mx-auto h-full" />
