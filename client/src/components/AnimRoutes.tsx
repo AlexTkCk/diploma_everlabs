@@ -18,7 +18,7 @@ const AnimRoutes = () => {
         <Route path={"/"} element={<Home />}></Route>
         <Route path={"/account"} element={<Account />}></Route>
         <Route path={"/leaderboard"} element={<LeaderBoard />}></Route>
-        <Route path={"/gameRoom"} element={<GameRoom />}></Route>
+        <Route path={"/gameRoom/:room_id"} element={<GameRoom />}></Route>
         <Route path={"/multiplayerRoom"} element={<MupliplayerRoom />}></Route>
         <Route path={"/login"} element={<LoginModal/>}></Route>
         <Route path={"/login/:id/:jwt"} element={<LoginModal/>}></Route>
