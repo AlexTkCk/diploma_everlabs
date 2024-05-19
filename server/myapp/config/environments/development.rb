@@ -11,10 +11,12 @@ Rails.application.configure do
 
   config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins '*' # разрешить запросы с любых источников
+      origins 'http://localhost:3000', 'https://6be3-91-244-4-141.ngrok-free.app'
       resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options]
     end
   end
+
+
   # Do not eager load code on boot.
   config.eager_load = false
   config.action_mailer.delivery_method = :sendmail
@@ -85,7 +87,7 @@ Rails.application.configure do
 
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
-  config.hosts << "6be3-91-244-4-141.ngrok-free.app"
+  config.hosts << "6be3-91-244-4-141.ngrok-free.appZ"
   config.hosts << "6be3-91-244-4-141.ngrok-free.app"
   # Suppress logger output for asset requests.
   config.assets.quiet = true

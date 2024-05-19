@@ -9,7 +9,8 @@ class GoogleAutoController < ApplicationController
 
     if user
       token=generate_token(user.id)
-      redirect_to "https://diploma-7f61b.web.app/login/#{user.id}/#{token}", allow_other_host: true
+      # redirect_to "https://diploma-7f61b.web.app/login/#{user.id}/#{token}", allow_other_host: true
+      redirect_to "http://localhost:3000/login/#{user.id}/#{token}", allow_other_host: true
     else
       user = User.new(login: email, password: "pDrmCWs8fHG4J2WDwsf8!", email_auto: 1, uid: uid)
       user.nickname= Faker::Internet.unique.username
@@ -21,7 +22,8 @@ class GoogleAutoController < ApplicationController
         new_room.save
 
         token=generate_token(user.id)
-        redirect_to "https://diploma-7f61b.web.app/login/#{user.id}/#{token}", allow_other_host: true
+        # redirect_to "https://diploma-7f61b.web.app/login/#{user.id}/#{token}", allow_other_host: true
+        redirect_to "http://localhost:3000/login/#{user.id}/#{token}", allow_other_host: true
       else
         render json: { error: 'An error occurred while creating the user' }, status: :unprocessable_entity
       end

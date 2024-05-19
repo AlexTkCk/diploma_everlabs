@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   post '/text_race', to: 'room_action#text_for_race'
   post '/role', to: 'room_action#role'
   post '/record_match', to: 'matches#new_recording'
+  post '/edit_profile', to: 'edit_profile#edit_profile'
   mount ActionCable.server => '/cable'
 
 
