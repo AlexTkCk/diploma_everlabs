@@ -5,9 +5,12 @@ import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
 import {FaFlag} from "react-icons/fa";
 import SessionLineChar, {SessionData} from "../components/SessionLineChar";
 import Car from "../components/Car";
-import {WSSUrl} from "../data/serverUrl";
-import consumer from "../cable";
+import {serverUrl, WSSUrl} from "../data/serverUrl";
 import {userContext} from "../context/UserContext";
+import {createConsumer} from "@rails/actioncable";
+import {useParams} from "react-router-dom";
+import Button from "../components/Button";
+import PreGamePopUp from "../components/PreGamePopUp";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
 
@@ -50,10 +53,15 @@ const charStateMap = {
     [charStateEnum.NEUTRAL]: 'text-white'
 }
 
+const actionCableUrl = WSSUrl + '/cable';
+
+const consumer = createConsumer(actionCableUrl);
+
 const plaintext = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-const timeDuration = 100;
+const timeDuration = 30;
 const GameRoom = () => {
 
+    const {room_id} = useParams();
     const {userId} = useContext(userContext);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const roadRef = useRef<HTMLDivElement>(null);
@@ -62,9 +70,11 @@ const GameRoom = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [fromLeft, setFromLeft] = useState(0);
     const [enemyFromLeft, setEnemyFromLeft] = useState(0);
+    const [role, setRole] = useState<'host' | 'guest' | undefined | null>(undefined);
     const [ws, setWs] = useState<any | null>(null);
     const [caret, setCaret] = useState(0);
     const [text, setText] = useState(plaintext.split('').map(char => ({value: char, state: charStateEnum.NEUTRAL})));
+    const [showPreGamePopUp, setShowPreGamePopUp] = useState(true);
 
     const [playerSpeed, setPlayerSpeed] = useState(0);
     const [enemySpeed, setEnemySpeed] = useState(0);
@@ -79,17 +89,23 @@ const GameRoom = () => {
 
     const sendMessage = (symbol: string, trueSymbol: string): void => {
         if (ws) {
-            ws.perform('speed', {user_id: userId, room_id: 9, valid: symbol === trueSymbol});
+            ws.perform('speed', {user_id: userId, room_id: room_id, valid: symbol === trueSymbol});
         }
     }
 
-    useEffect(() => {
+    const startGame = () => {
         if (ws) {
-            setInterval(() =>  {
-                ws.perform('speed_slow', {user_id: userId, room_id: 9});
-            }, 100);
+            ws.perform('start_game', {room_id: room_id});
         }
-    }, [ws])
+    }
+
+    // useEffect(() => {
+    //     if (ws) {
+    //         setInterval(() =>  {
+    //             ws.perform('speed_slow', {user_id: userId, room_id: 9});
+    //         }, 100);
+    //     }
+    // }, [ws])
 
     useEffect(() => {
         setSessionChartData(prev => [...prev, {
@@ -101,6 +117,33 @@ const GameRoom = () => {
 
 
     useEffect(() => {
+        if (room_id) {
+            fetch(serverUrl + "/role", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({room_id})
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    const {host: host_id, guest: guest_id} = data;
+                    if (host_id === userId.toString()) {
+                        setRole('host');
+                        return
+                    }
+                    if (guest_id === userId.toString()) {
+                        setRole('guest');
+                        return
+                    }
+
+                    setRole(null);
+                    return;
+                })
+        }
+
         const timerInterval = setInterval((() => {
             let innerTimer = timeDuration;
             return () => {
@@ -125,20 +168,15 @@ const GameRoom = () => {
         const subscription = consumer.subscriptions.create(
             { channel: "RaceChannel", room_id: 9 },
             {
-                connected() {
-                    console.log(`Connected to RaceChannel for room ${9}`);
-                },
-
-                disconnected() {
-                    console.log(`Disconnected from RaceChannel for room ${9}`);
-                },
-
                 received(data: any) {
-                    const {user_id, speed_change} = data;
-                    if (user_id === userId)
-                        setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
-                    else
-                        setEnemySpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                    if (data.notice) {
+                        setShowPreGamePopUp(false);
+                    }
+                    // const {user_id, speed_change} = data;
+                    // if (user_id === userId)
+                    //     setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                    // else
+                    //     setEnemySpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
                 }
             }
         );
@@ -184,6 +222,7 @@ const GameRoom = () => {
                     initial={'initial'}
                     animate={'animate'}
                     exit={'exit'}>
+            {showPreGamePopUp && <PreGamePopUp role={role} handler={startGame}/>}
             <div className={'h-3/5 bg-black flex flex-col relative'}>
                 <div ref={roadRef}  className={`flex transition w-fit duration-150 ease-linear`}>
                     <pre className={'text-[6px] text-white'}>{city}</pre>
