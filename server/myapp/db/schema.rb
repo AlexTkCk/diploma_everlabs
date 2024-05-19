@@ -10,7 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_15_133416) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_19_184857) do
+  create_table "matches", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -20,24 +25,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_133416) do
     t.string "password"
     t.boolean "password_status", default: false
     t.boolean "game_lock_status", default: false
-    t.text "user_ids", default: "[]"
+    t.text "host_id", default: "0"
+    t.text "user_id", default: "0"
+    t.text "text"
+    t.integer "speed_1", default: 0
+    t.integer "speed_2", default: 0
   end
 
   create_table "users", force: :cascade do |t|
     t.text "login"
     t.text "password_digest"
     t.text "nickname"
+    t.text "about_me"
     t.text "img_url"
     t.integer "count_race"
-    t.integer "pbtime"
-    t.integer "pbsymbols"
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.boolean "email_auto", default: false
     t.string "uid"
     t.string "token_email"
     t.string "token_password"
-    t.string "jwt"
   end
 
 end

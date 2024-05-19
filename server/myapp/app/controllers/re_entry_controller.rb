@@ -8,12 +8,7 @@ class ReEntryController < JwtTokenApplicationController
     users_id = payload['user_id']
     user = User.find_by(id: users_id)
     puts user.nickname
-    render json: { message:'Login successful', id: users_id, name: user.nickname, status:'7' }
-  end
-
-
-  def testing
-    render json: { message: 'Выполнено какое-то действие' }
+    render json: { message:'Login successful', id: users_id, name: user.nickname, descriptions: user.about_me, avatar: user.img_url, count_race: user.count_race, status:'7' }
   end
 
 end

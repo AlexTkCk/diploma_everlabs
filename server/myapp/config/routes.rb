@@ -11,10 +11,13 @@ Rails.application.routes.draw do
   get '/password_recovery/:token/:id', to: 'password_recovery#add_new_pass'
   post '/password/change/:token/:id', to: 'password_recovery#change_password'
   get '/test', to: 're_entry#testing'
-  post '/createroom', to: 'room_action#entering_own_room'
+  post '/enter_own_room', to: 'room_action#entering_own_room'
+  post '/enter_room', to: 'room_action#entering_other_room'
   post '/leave_room', to: 'room_action#leave_room'
   get '/get_info_rooms', to: 'room_action#room_info'
-  get '/text_race', to: 'room_action#text_for_race'
+  post '/text_race', to: 'room_action#text_for_race'
+  post '/role', to: 'room_action#role'
+  post '/record_match', to: 'matches#new_recording'
   mount ActionCable.server => '/cable'
 
 
