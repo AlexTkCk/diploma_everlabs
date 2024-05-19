@@ -44,6 +44,8 @@ const UserContext = ({children}: TUserContextProps) => {
                 })
                 setIsFetching(false);
             })
+        } else {
+            setIsFetching(false);
         }
     }, []);
 
