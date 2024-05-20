@@ -7,10 +7,11 @@ import { MdLeaderboard } from "react-icons/md";
 import { BiSolidUserAccount } from "react-icons/bi";
 import { themeContext } from "../context/ThemeContext";
 import { themeStyles } from "../styles/themeStyles";
+import {userContext} from "../context/UserContext";
 
 const Navigation = () => {
   const { themeConfig } = useContext(themeContext);
-
+  const { userData } = useContext(userContext);
   return (
       <div
           className={`${themeConfig.secondary} ${themeStyles.themeTransitionStyle} px-3 py-2 flex items-center`}
@@ -27,11 +28,15 @@ const Navigation = () => {
         </h1>
         <div className={"flex gap-3 ml-auto px-10 w-fit"}>
           <CustomLink link={"/gameRoom"} text={"Single player"} icon={FaRobot} />
-          <CustomLink
-              link={"/multiplayerRoom"}
-              text={"Multiplayer"}
-              icon={FaUsers}
-          />
+          {
+            userData
+              &&
+            <CustomLink
+                link={"/multiplayerRoom"}
+                text={"Multiplayer"}
+                icon={FaUsers}
+            />
+          }
           <CustomLink
               link={"/leaderboard"}
               text={"Leaderboard"}

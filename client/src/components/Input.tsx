@@ -5,6 +5,7 @@ type TInput = {
   labelText: string;
   changeHandler: (e: any) => void;
   type?: "text" | "password";
+  value?: string
 };
 
 const Input = ({
@@ -12,6 +13,7 @@ const Input = ({
   labelText,
   changeHandler,
   type = "text",
+  value
 }: TInput) => {
   return (
     <label className={"flex flex-col font-primary text-title-lg"}>
@@ -19,6 +21,7 @@ const Input = ({
       <input
         onChange={changeHandler}
         type={type}
+        value={value}
         placeholder={placeholder}
         className={"font-secondary text-label-lg rounded-full px-3"}
       />

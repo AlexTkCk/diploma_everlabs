@@ -1,21 +1,38 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useContext} from "react";
 import { FaRegWindowClose } from "react-icons/fa";
 import hostImg from "../assets/user_avatar.jpeg";
 import MPRoomData from "../data/MPRoomData.json";
 import MPModalRow from "./MPModalRow";
+import {serverUrl} from "../data/serverUrl";
+import {userContext} from "../context/UserContext";
+import {useNavigate} from "react-router";
+import rowMp from "./RowMp";
+import Button from "./Button";
 
 type TMPModal = {
   handleCloseModal: () => void;
+  room: any
 };
 
-const MultiplayerModal: React.FC<TMPModal> = ({ handleCloseModal }) => {
-  const [roomData, setRoomData] = useState(MPRoomData);
-  const [playersData, setPlayersData] = useState(MPRoomData.players);
+const MultiplayerModal: React.FC<TMPModal> = ({ room, handleCloseModal }) => {
+  const {userId} = useContext(userContext);
+  const navigate = useNavigate();
+  const [showPasswordPopUp, setShowPasswordPopUp] = useState(false);
+  const [password, setPassword] = useState('');
+
+  const [currentUserRooms, setCurrentUserRooms] = useState<any[] | null>(null);
 
   useEffect(() => {
-    setPlayersData(MPRoomData.players);
-    setRoomData(MPRoomData);
-  }, []);
+    fetch(serverUrl + '/user_info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({id: userId})
+    }).then(res => res.json()).then(data => setCurrentUserRooms(data.matches))
+  }, [])
 
   return (
     <>
@@ -34,46 +51,136 @@ const MultiplayerModal: React.FC<TMPModal> = ({ handleCloseModal }) => {
             onClick={handleCloseModal}
           />
 
-          <img
-            className="w-32 rounded-full border-2 border-black bg-center"
-            src={playersData[0].isHost ? hostImg : playersData[0].img}
-            alt="host_img"
-          />
+          {/*<img*/}
+          {/*  className="w-32 rounded-full border-2 border-black bg-center"*/}
+          {/*  src={room[0].isHost ? hostImg : room[0].img}*/}
+          {/*  alt="host_img"*/}
+          {/*/>*/}
 
-          <h3 className="font-bold text-2xl">{roomData.roomName}</h3>
+          <h3 className="font-bold text-2xl">{room.name}</h3>
           <div className="flex flex-row justify-between items-center w-full">
             <div className="flex flex-row gap-2">
-              {roomData.isLocked ? (
+              {room.game_lock_status ? (
                 <p className="font-bold">Locked</p>
               ) : (
                 <p className="font-bold">Not Locked</p>
               )}
-              {roomData.password.length > 0 ? (
-                <p className="font-bold">
-                  Password:{" "}
-                  <span className="font-normal">{roomData.password}</span>
-                </p>
-              ) : (
-                <p>No password</p>
-              )}
             </div>
 
             <p className="text-xl font-bold">
-              Players: {roomData.playerCount.connectedPlayers}/
-              {roomData.playerCount.totalPlayersAllowed}
+              Players: {room.players_count}/
+              2
             </p>
           </div>
 
           <div className="h-fit w-full flex flex-col gap-2">
-            {playersData.map((player) => (
-              <MPModalRow key={player.id} players={player} />
-            ))}
+            {room.host_id !== '0' && <MPModalRow hostId={room.host_id} roomId={room.id} playerId={room.host_id} />}
+            {room.user_id !== '0' && <MPModalRow hostId={room.host_id} roomId={room.id} playerId={room.user_id} />}
           </div>
 
-          <button className="w-1/3 h-12 bg-green-500 text-white text-2xl font-primary font-bold transition-all duration-300 xl:hover:shadow-buttonHover_lg xl:hover:shadow-green-700">
+          <button onClick={() => {
+
+            if (room.password_status && userId.toString() !== room.host_id) {
+              setShowPasswordPopUp(true);
+              return;
+            }
+
+            if (room.players_count === 2) {
+              alert('Room is full');
+              return;
+            }
+
+            if (userId.toString() === room.user_id || userId.toString() === room.host_id) {
+              navigate('/gameRoom/' + room.id);
+            } else {
+
+            if (currentUserRooms && currentUserRooms.length > 0)
+                fetch(serverUrl + '/leave', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true',
+                    'Accept': 'application/json',
+                  },
+                  body: JSON.stringify({id: userId})
+                })
+
+                fetch(serverUrl + '/enter_room', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'ngrok-skip-browser-warning': 'true',
+                    'Accept': 'application/json',
+                  },
+                  body: JSON.stringify({id: userId, room_id: room.id})
+                }).then(res => res.json()).then(data => {
+                  navigate('/gameRoom/' + room.id);
+                })
+            }
+
+          }} className="w-1/3 h-12 bg-green-500 text-white text-2xl font-primary font-bold transition-all duration-300 xl:hover:shadow-buttonHover_lg xl:hover:shadow-green-700">
             Play
           </button>
         </div>
+
+        {showPasswordPopUp
+            &&
+            <div className={'absolute bg-white border-4 z-10 border-black p-5 flex flex-col gap-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'}>
+              <h1 className={'font-primary text-2xl'}>Enter password to enter:</h1>
+              <input type="text" onChange={({currentTarget: {value}}) => {setPassword(value)}} className={'border border-black rounded-lg text-xl p-2'}/>
+              <div className={'flex w-full justify-evenly gap-2'}>
+                <Button handler={() => {
+
+                  fetch(serverUrl + '/enter_password', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'ngrok-skip-browser-warning': 'true',
+                      'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({id: userId, room_id: room.id, password: password})
+                  }).then(res => res.json()).then(data => {
+                        if (data.status === '3') {
+                          if (userId.toString() === room.user_id || userId.toString() === room.host_id) {
+                            navigate('/gameRoom/' + room.id);
+                          } else {
+                            if (currentUserRooms && currentUserRooms.length > 0)
+                              fetch(serverUrl + '/leave', {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                  'ngrok-skip-browser-warning': 'true',
+                                  'Accept': 'application/json',
+                                },
+                                body: JSON.stringify({id: userId})
+                              })
+
+                            fetch(serverUrl + '/enter_room', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'ngrok-skip-browser-warning': 'true',
+                                'Accept': 'application/json',
+                              },
+                              body: JSON.stringify({id: userId, room_id: room.id})
+                            }).then(res => res.json()).then(data => {
+                              navigate('/gameRoom/' + room.id);
+                            })
+                          }
+                        } else {
+                          alert('Wrong password');
+                        }
+                    }
+                  )
+                }} buttonClassName={'text-green-500 border-green-500 font-secondary'}>Accept</Button>
+                <Button handler={() => {
+                  setShowPasswordPopUp(false);
+                  setPassword('');
+                }} buttonClassName={'text-red-500 border-red-500 font-secondary'}>Decline</Button>
+              </div>
+            </div>
+        }
+
       </div>
     </>
   );

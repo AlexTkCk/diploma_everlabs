@@ -19,12 +19,13 @@ export interface SessionData {
 
 interface SessionLineChartProps {
   sessionData: SessionData[];
+  leaveHandler: () => void
 }
 
-const SessionLineChart = ({sessionData}: SessionLineChartProps) => {
+
+const SessionLineChart = ({sessionData, leaveHandler}: SessionLineChartProps) => {
     const navigate = useNavigate();
     const {themeConfig} = useContext(themeContext);
-    console.log(sessionData)
     return (
         <div className={"absolute w-full h-full flex flex-col pt-20 items-center"}>
             <div
@@ -80,7 +81,10 @@ const SessionLineChart = ({sessionData}: SessionLineChartProps) => {
 
             <Button
                 buttonClassName={`z-10 hover:shadow-buttonHover_lg hover:shadow-red-500 transition-all duration-500 ${themeConfig.accent} mt-5`}
-                handler={() => navigate("/")}
+                handler={() => {
+                    leaveHandler();
+                    navigate("/");
+                }}
             >
                 Leave the race
             </Button>

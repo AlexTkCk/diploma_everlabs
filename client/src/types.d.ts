@@ -19,4 +19,8 @@ export type TThemeConfig = {
 
 export type TUserData = {
     name: string;
+    about: string,
+    imageUrl: string,
+    created_at: string,
+    races_amount: number,
 } | null;

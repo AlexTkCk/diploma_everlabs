@@ -6,18 +6,23 @@ import { themeContext } from "../context/ThemeContext";
 type TEditModal = {
   isOpen: boolean;
   handler: () => void;
+  oldData: {
+    name: string,
+    about: string,
+    profileImg: string,
+  },
   onSave: (
     newName: string,
     newAbout: string,
-    newProfileImg: File | null
+    newProfileImg: string
   ) => void;
 };
 
-const EditModal: React.FC<TEditModal> = ({ isOpen, handler, onSave }) => {
+const EditModal: React.FC<TEditModal> = ({ isOpen, handler, onSave, oldData }) => {
   const { themeConfig } = useContext(themeContext);
-  const [newName, setNewName] = useState("");
-  const [newAbout, setNewAbout] = useState("");
-  const [newProfileImg, setNewProfileimg] = useState<File | null>(null);
+  const [newName, setNewName] = useState(oldData.name);
+  const [newAbout, setNewAbout] = useState(oldData.about);
+  const [newProfileImg, setNewProfileimg] = useState<string>(oldData.profileImg);
 
   if (!isOpen) return null;
 
@@ -38,11 +43,13 @@ const EditModal: React.FC<TEditModal> = ({ isOpen, handler, onSave }) => {
         <div className={"mx-auto flex flex-col gap-10"}>
           <Input
             placeholder={"Racer"}
+            value={newName}
             changeHandler={(e) => setNewName(e.target.value)}
             labelText={'Edit "Name"'}
           />
           <Input
             placeholder={"Write something.."}
+            value={newAbout}
             changeHandler={(e) => setNewAbout(e.target.value)}
             labelText={'Edit "About me"'}
           />
@@ -57,7 +64,17 @@ const EditModal: React.FC<TEditModal> = ({ isOpen, handler, onSave }) => {
               className="hidden"
               type="file"
               id="file"
-              onChange={(e) => setNewProfileimg(e.target.files?.[0] || null)}
+              onChange={(e) => {
+                const file = e.target.files?.[0] || null;
+                if (file) {
+                    let reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => {
+                        setNewProfileimg(reader.result as string)
+                    };
+
+                }
+              }}
             />
           </div>
 

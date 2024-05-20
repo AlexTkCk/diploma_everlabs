@@ -38,10 +38,18 @@ const UserContext = ({children}: TUserContextProps) => {
                 },
                 body: JSON.stringify({'token': jwt})
             }).then(res => res.json()).then(data => {
-                setUserId(data.id);
-                setUserData({
-                    name: data.name,
-                })
+                if (data.id) {
+                    setUserId(data.id);
+                    setUserData({
+                        name: data.name,
+                        about: data.descriptions,
+                        imageUrl: data.avatar,
+                        races_amount: data.count_race,
+                        created_at: data.created_at,
+                    })
+                }
+                setIsFetching(false);
+            }).catch(() => {
                 setIsFetching(false);
             })
         } else {

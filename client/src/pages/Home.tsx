@@ -10,6 +10,7 @@ import { themeContext } from "../context/ThemeContext";
 import { userContext } from "../context/UserContext";
 import Marquee from "react-fast-marquee";
 import recentGames from "../data/recentGames.json";
+import {Link} from "react-router-dom";
 
 const Home = () => {
   const { userData } = useContext(userContext);
@@ -98,11 +99,13 @@ const Home = () => {
                 (themeValue === "black"
                   ? "border-white text-white hover:bg-white hover:text-black"
                   : "border-black hover:bg-white") +
-                " transition-colors duration-250"
+                " transition-colors duration-250  text-nowrap"
               }
             >
+              <Link to={'/gameRoom'}>
               Practise
               <FaFlagCheckered className={"text-button"} />
+              </Link>
             </Button>
           </span>
         </div>
@@ -145,13 +148,15 @@ const Home = () => {
                 " transition-colors duration-250"
               }
             >
-              Challenge
+              <Link to={'/multiplayer'}>
+                Challenge
               <div className={"flex justify-center items-center"}>
                 <FaFlagCheckered
-                  className={"scale-x-[-1] -rotate-45 text-button"}
+                    className={"scale-x-[-1] -rotate-45 text-button"}
                 />
                 <FaFlagCheckered className={"text-button rotate-45"} />
               </div>
+              </Link>
             </Button>
           </span>
         </div>

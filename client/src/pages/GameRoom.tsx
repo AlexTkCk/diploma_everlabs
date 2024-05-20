@@ -7,9 +7,8 @@ import SessionLineChar, {SessionData} from "../components/SessionLineChar";
 import Car from "../components/Car";
 import {serverUrl, WSSUrl} from "../data/serverUrl";
 import {userContext} from "../context/UserContext";
-import {createConsumer} from "@rails/actioncable";
+import {Channel, createConsumer} from "@rails/actioncable";
 import {useParams} from "react-router-dom";
-import Button from "../components/Button";
 import PreGamePopUp from "../components/PreGamePopUp";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
@@ -56,13 +55,13 @@ const charStateMap = {
 const actionCableUrl = WSSUrl + '/cable';
 
 const consumer = createConsumer(actionCableUrl);
-
 const plaintext = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+
 const timeDuration = 30;
 const GameRoom = () => {
 
     const {room_id} = useParams();
-    const {userId} = useContext(userContext);
+    const {userId, userData} = useContext(userContext);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const roadRef = useRef<HTMLDivElement>(null);
     const enemyRef = useRef<HTMLDivElement>(null);
@@ -71,10 +70,11 @@ const GameRoom = () => {
     const [fromLeft, setFromLeft] = useState(0);
     const [enemyFromLeft, setEnemyFromLeft] = useState(0);
     const [role, setRole] = useState<'host' | 'guest' | undefined | null>(undefined);
-    const [ws, setWs] = useState<any | null>(null);
+    const [ws, setWs] = useState<Channel | null>(null);
     const [caret, setCaret] = useState(0);
-    const [text, setText] = useState(plaintext.split('').map(char => ({value: char, state: charStateEnum.NEUTRAL})));
+    const [text, setText] = useState<{value: string, state: charStateEnum}[]>(plaintext.split('').map((char: string) => ({value: char, state: charStateEnum.NEUTRAL})));
     const [showPreGamePopUp, setShowPreGamePopUp] = useState(true);
+
 
     const [playerSpeed, setPlayerSpeed] = useState(0);
     const [enemySpeed, setEnemySpeed] = useState(0);
@@ -88,8 +88,48 @@ const GameRoom = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const sendMessage = (symbol: string, trueSymbol: string): void => {
-        if (ws) {
-            ws.perform('speed', {user_id: userId, room_id: room_id, valid: symbol === trueSymbol});
+        if (room_id) {
+            if (ws) {
+                ws.perform('speed', {user_id: userId, room_id: room_id, valid: symbol === trueSymbol});
+            }
+        } else {
+            if (symbol === trueSymbol) {
+                setPlayerSpeed(prev => prev + 2)
+            }
+            else {
+                setPlayerSpeed(prev => prev - 2 < 0 ? 0 : prev - 2)
+            }
+        }
+
+    }
+
+    const startTimer = () => {
+        const timerInterval = setInterval((() => {
+            let innerTimer = timeDuration;
+            return () => {
+                setTimer(prev => prev - 1 < 0 ? 0 : prev - 1);
+                innerTimer--;
+                if (innerTimer === 0) {
+                    clearInterval(timerInterval);
+                    setIsModalOpen(true);
+                    if (textAreaRef.current)
+                        textAreaRef.current.disabled = true;
+                }
+            }
+        })(), 1000);
+
+        setInterval((() => {
+            return () => {
+                setPlayerSpeed(prev => prev - 0.3 < 0 ? 0 : prev - 0.3);
+                setEnemySpeed(prev => prev - 0.3 < 0 ? 0 : prev - 0.3);
+            }
+        })(), 100);
+
+        if (!room_id) {
+            setInterval(() =>  {
+                setPlayerSpeed(prev => prev - 0.5 < 0 ? 0 : prev - 0.5);
+                setEnemySpeed(prev => prev + Math.random() * 0.5);
+            }, 100);
         }
     }
 
@@ -97,27 +137,45 @@ const GameRoom = () => {
         if (ws) {
             ws.perform('start_game', {room_id: room_id});
         }
+
+        setShowPreGamePopUp(false);
     }
 
-    // useEffect(() => {
-    //     if (ws) {
-    //         setInterval(() =>  {
-    //             ws.perform('speed_slow', {user_id: userId, room_id: 9});
-    //         }, 100);
-    //     }
-    // }, [ws])
+    useEffect(() => {
+
+    }, [ws])
 
     useEffect(() => {
-        setSessionChartData(prev => [...prev, {
-            name: Math.abs(timer - timeDuration) + 's',
-            sps: Math.round(sessionData.totalSymbols / (Math.abs(timer - timeDuration) + 0.0000001) * 100) / 100,
-            accuracy: Math.round(sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001) * 100) / 100
-        }])
+        if (timer === 0) {
+            if (ws) ws.unsubscribe();
+        }
+
+        setSessionChartData(prev => {
+             return [...prev, {
+                 name: Math.abs(timer - timeDuration) + 's',
+                 sps: Math.round(sessionData.totalSymbols / (Math.abs(timer - timeDuration) + 0.0000001) * 100) / 100,
+                 accuracy: Math.round(sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001) * 100) / 100
+             }]
+        })
     }, [timer])
 
 
     useEffect(() => {
         if (room_id) {
+            fetch(serverUrl + "/get_text", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({room_id})
+            })
+                .then((res) => res.json())
+                .then(({text}) => {
+                    setText(text.split('').map((char: string) => ({value: char, state: charStateEnum.NEUTRAL})))
+                })
+
             fetch(serverUrl + "/role", {
                 method: "POST",
                 headers: {
@@ -142,21 +200,9 @@ const GameRoom = () => {
                     setRole(null);
                     return;
                 })
+        } else {
+            setRole('host');
         }
-
-        const timerInterval = setInterval((() => {
-            let innerTimer = timeDuration;
-            return () => {
-                setTimer(prev => prev - 1 < 0 ? 0 : prev - 1);
-                innerTimer--;
-                if (innerTimer === 0) {
-                    clearInterval(timerInterval);
-                    setIsModalOpen(true);
-                    if (textAreaRef.current)
-                        textAreaRef.current.disabled = true;
-                }
-            }
-        })(), 1000);
 
         if (containerRef.current) {
             const {width: containerWidth} = containerRef.current.getBoundingClientRect();
@@ -165,25 +211,29 @@ const GameRoom = () => {
             setCharsInARow(Math.round(containerWidth / childWidth))
         }
 
-        const subscription = consumer.subscriptions.create(
-            { channel: "RaceChannel", room_id: 9 },
-            {
-                received(data: any) {
-                    if (data.notice) {
-                        setShowPreGamePopUp(false);
+        if (room_id) {
+            const subscription = consumer.subscriptions.create(
+                { channel: "RaceChannel", room_id: room_id},
+                {
+                    received(data: any) {
+                        if (data.notice) {
+                            setShowPreGamePopUp(false);
+                            startTimer();
+                        }
+
+                        const {user_id, speed_change} = data;
+                        if (user_id.toString() === userId.toString())
+                            setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                        else
+                            setEnemySpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
                     }
-                    // const {user_id, speed_change} = data;
-                    // if (user_id === userId)
-                    //     setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
-                    // else
-                    //     setEnemySpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
                 }
-            }
-        );
-        setWs(subscription);
-        return () => {
-            subscription.unsubscribe();
-        };
+            );
+            setWs(subscription);
+            return () => {
+                subscription.unsubscribe();
+            };
+        }
     }, [])
 
     useEffect(() => {
@@ -215,6 +265,50 @@ const GameRoom = () => {
 
         }
     }, [caret])
+
+    const leaveRoom = () => {
+        let averageSps = 0;
+        let averageAccuracy = 0;
+
+        for (const {accuracy, sps} of sessionChartData) {
+            averageSps += sps;
+            averageAccuracy += accuracy;
+        }
+
+        averageSps /= timeDuration - timer + 0.000001;
+        averageAccuracy /= timeDuration - timer + 0.000001;
+
+        fetch(serverUrl + "/save_game", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true",
+                'Accept': "application/json",
+            },
+            body: JSON.stringify({user_id: userId, nickname: userData?.name, accuracy: averageAccuracy, sps: averageSps})
+        })
+
+        fetch(serverUrl + "/text_race", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true",
+                'Accept': "application/json",
+            },
+            body: JSON.stringify({room_id: room_id})
+        })
+
+        fetch(serverUrl + "/leave", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true",
+                'Accept': "application/json",
+            },
+            body: JSON.stringify({id: userId.toString()})
+        })
+
+    }
 
     return (
         <motion.div className={'absolute flex flex-col top-0 left-0 w-full h-full bg-white z-10 overflow-x-hidden'}
@@ -295,9 +389,12 @@ const GameRoom = () => {
                     {text.map(({value, state}, index) => <span key={index} className={`${charStateMap[state]} ${index === caret ? 'border-l border-white caret_here' : ''} transition duration-250 ease-linear`}>{value}</span>)}
                 </div>
             </div>
-            <button onClick={() => setIsModalOpen(true)} className={'mx-auto mb-10 grid place-items-center bg-red-600 rounded-xl w-1/5 py-5 border border-black'}><FaFlag className={'text-white text-5xl text-center'}/></button>
+            <button onClick={() => {
+                if (ws) ws.unsubscribe();
+                setIsModalOpen(true);
+            }} className={'mx-auto mb-10 grid place-items-center bg-red-600 rounded-xl w-1/5 py-5 border border-black'}><FaFlag className={'text-white text-5xl text-center'}/></button>
             {isModalOpen &&
-                <SessionLineChar sessionData={sessionChartData}></SessionLineChar>
+                <SessionLineChar leaveHandler={leaveRoom} sessionData={sessionChartData}></SessionLineChar>
             }
         </motion.div>
     );
