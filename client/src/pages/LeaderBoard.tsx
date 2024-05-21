@@ -4,52 +4,63 @@ import { motion } from "framer-motion";
 import RowLb from "../components/RowLb";
 import Checkbox from "../components/CheckBox";
 import dataLB from "../data/leaderboardData.json";
+import {serverUrl} from "../data/serverUrl";
 
 type TData = {
   id: number;
-  name: string;
-  speed: number;
-  time: number;
+  nickname: string;
+  accuracy: number;
+  sps: number;
 };
 
 const LeaderBoard = () => {
-  const [data, setData] = useState<TData[]>(dataLB);
+  const [data, setData] = useState<TData[]>([]);
   const [searchData, setSearchData] = useState("");
-  const [sortBySpeed, setSortBySpeed] = useState(false);
-  const [sortByTime, setSortByTime] = useState(false);
-  const [initialData, setInitialData] = useState<TData[]>([]);
+  const [sortByAccuracy, setSortByAccuracy] = useState(false);
+  const [sortBySps, setSortBySps] = useState(false);
 
   const handleSearch = (e: any) => {
     setSearchData(e.target.value);
   };
 
+  useEffect(() => {
+    fetch(serverUrl + '/leaderboard', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
+        'Accept': 'application/json',
+      }
+    }).then(res => res.json()).then(data => {
+      setData(data)
+    })
+  }, [])
+
   const filteredData = data.filter((player) =>
-    player.name.toLowerCase().includes(searchData.toLowerCase())
+    {
+      return player.nickname.toLowerCase().includes(searchData.toLowerCase())
+    }
   );
 
   const handleSort = (sortBy: string) => {
     let newData = [...data];
 
-    if (sortBy === "speed") {
-      newData = sortBySpeed
-        ? newData.sort((a, b) => a.speed - b.speed)
-        : newData.sort((a, b) => b.speed - a.speed);
-      setSortBySpeed(!sortBySpeed);
-      setSortByTime(false);
-    } else if (sortBy === "time") {
-      newData = sortByTime
-        ? newData.sort((a, b) => b.time - a.time)
-        : newData.sort((a, b) => a.time - b.time);
-      setSortByTime(!sortByTime);
-      setSortBySpeed(false);
+    if (sortBy === "accuracy") {
+      newData = sortByAccuracy
+        ? newData.sort((a, b) => a.accuracy - b.accuracy)
+        : newData.sort((a, b) => b.accuracy - a.accuracy);
+      setSortByAccuracy(!sortByAccuracy);
+      setSortBySps(false);
+    } else if (sortBy === "sps") {
+      newData = sortBySps
+        ? newData.sort((a, b) => a.sps - b.sps)
+        : newData.sort((a, b) => b.sps - a.sps);
+      setSortBySps(!sortBySps);
+      setSortByAccuracy(false);
     }
     setData(newData);
   };
 
-  useEffect(() => {
-    setInitialData(dataLB);
-    setData(dataLB);
-  }, []);
 
   return (
     <motion.div
@@ -69,8 +80,8 @@ const LeaderBoard = () => {
         <div className="w-3/4 h-full border-2 border-black flex flex-col rounded-2xl py-5 px-2">
           <div className="flex flex-rowLb justify-around pb-2 text-xl font-bold">
             <span className="w-1/3 text-center">Name</span>
-            <span className="w-1/3 text-center">Speed</span>
-            <span className="w-1/3 text-center">Time</span>
+            <span className="w-1/3 text-center">Accuracy</span>
+            <span className="w-1/3 text-center">SpS</span>
           </div>
           <hr className="border-black" />
           <div
@@ -105,16 +116,16 @@ const LeaderBoard = () => {
           <hr className="border-black w-full" />
 
           <Checkbox
-            value="by speed"
+            value="by accuracy"
             id="speed"
-            isChecked={sortBySpeed}
-            onChange={() => handleSort("speed")}
+            isChecked={sortByAccuracy}
+            onChange={() => handleSort("accuracy")}
           />
           <Checkbox
-            value="by time"
+            value="by sps"
             id="time"
-            isChecked={sortByTime}
-            onChange={() => handleSort("time")}
+            isChecked={sortBySps}
+            onChange={() => handleSort("sps")}
           />
         </div>
       </div>

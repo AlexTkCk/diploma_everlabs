@@ -82,7 +82,7 @@ const Account = () => {
         Log out
       </button>
 
-      <div className="relative h-full w-3/4 flex flex-col gap-8 border-2 border-slate-900 p-8 pb-24 rounded-md shadow-xl bg-account bg-contain bg-repeat hover:">
+      <div className="relative h-full w-3/4 flex flex-col gap-8 border-2 border-slate-900 p-8 pb-12 rounded-md shadow-xl bg-account bg-contain bg-repeat hover:">
         <h2 className="text-5xl">Driver Licence</h2>
         <div className="h-full flex flex-row gap-10">
           <img
@@ -90,23 +90,26 @@ const Account = () => {
             src={data.imageUrl}
             alt="user_avatar"
           />
-          <div className="flex flex-col gap-5 font-primary text-xl">
-            <p>
-              <span className="font-bold font-primary">Name:</span>
-              {userData?.name}
+          <div className="flex flex-col gap-5 font-primary text-xl grow min-w-0">
+            <div className={'flex gap-5'}>
+              <p>
+                <span className="font-bold font-primary">Name:</span>
+                {userData?.name}
+              </p>
+              <p>
+                {" "}
+                <span className="font-bold">Number of races:</span>{" "}
+                {data.races_amount}
+              </p>
+            </div>
+            <p className="text-xl text-justify w-full text-wrap break-all grow min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-300">
+              <span className={"font-bold "}>About me:</span> {data.about}
             </p>
-            <p>
-              {" "}
-              <span className="font-bold">Number of races:</span>{" "}
-              {data.races_amount}
+            <p className="text-end text-md font-bold ">
+              Started playing: <br /> {data.created_at}
             </p>
           </div>
-          <p className="absolute bottom-3 right-3 text-center text-md font-bold ">
-            Started playing: <br /> {data.created_at}
-          </p>
-          <p className="text-xl text-justify w-2/4 scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-300">
-            <span className="font-bold">About me:</span> {data.about}
-          </p>
+
 
           <Button
             buttonClassName={`absolute top-5 right-5 bg-slate-200 hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}

@@ -74,7 +74,7 @@ const GameRoom = () => {
     const [caret, setCaret] = useState(0);
     const [text, setText] = useState<{value: string, state: charStateEnum}[]>(plaintext.split('').map((char: string) => ({value: char, state: charStateEnum.NEUTRAL})));
     const [showPreGamePopUp, setShowPreGamePopUp] = useState(true);
-
+    const [usersNames, setUsersNames] = useState({host_nickname: 'Fetching...', user_nickname: 'Fetching...'});
 
     const [playerSpeed, setPlayerSpeed] = useState(0);
     const [enemySpeed, setEnemySpeed] = useState(0);
@@ -118,32 +118,19 @@ const GameRoom = () => {
             }
         })(), 1000);
 
-        setInterval((() => {
-            return () => {
-                setPlayerSpeed(prev => prev - 0.3 < 0 ? 0 : prev - 0.3);
-                setEnemySpeed(prev => prev - 0.3 < 0 ? 0 : prev - 0.3);
-            }
-        })(), 100);
-
-        if (!room_id) {
-            setInterval(() =>  {
-                setPlayerSpeed(prev => prev - 0.5 < 0 ? 0 : prev - 0.5);
-                setEnemySpeed(prev => prev + Math.random() * 0.5);
-            }, 100);
-        }
+        setInterval(() => {
+            setPlayerSpeed(prev => prev - 0.3 < 0 ? 0 : prev - 0.3);
+            setEnemySpeed(prev => prev - 0.3 < 0 ? 0 : prev - 0.3);
+        }, 100);
     }
 
     const startGame = () => {
         if (ws) {
             ws.perform('start_game', {room_id: room_id});
         }
-
+        textAreaRef.current?.focus()
         setShowPreGamePopUp(false);
     }
-
-    useEffect(() => {
-
-    }, [ws])
 
     useEffect(() => {
         if (timer === 0) {
@@ -162,6 +149,19 @@ const GameRoom = () => {
 
     useEffect(() => {
         if (room_id) {
+
+            fetch(serverUrl + "/nick_names", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true",
+                    Accept: "application/json",
+                },
+                body: JSON.stringify({room_id})
+            }).then(res => res.json()).then(data => {
+                setUsersNames(data)
+            })
+
             fetch(serverUrl + "/get_text", {
                 method: "POST",
                 headers: {
@@ -233,6 +233,8 @@ const GameRoom = () => {
             return () => {
                 subscription.unsubscribe();
             };
+        } else {
+            startTimer();
         }
     }, [])
 
@@ -307,7 +309,6 @@ const GameRoom = () => {
             },
             body: JSON.stringify({id: userId.toString()})
         })
-
     }
 
     return (
@@ -327,12 +328,71 @@ const GameRoom = () => {
                     <pre className={'text-[6px] text-white'}>{city}</pre>
                     <pre className={'text-[6px] text-white'}>{city}</pre>
                     <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
+                    <pre className={'text-[6px] text-white'}>{city}</pre>
                 </div>
                 <hr className={'w-screen h-0.5 bg-white'}/>
                 <div className={'flex items-center flex-col'}>
-                    <div ref={enemyRef} className={'transition-all duration-500 ease-linear'}>
-                        <Car speed={enemySpeed}/>
-                    </div>
+                        <div ref={enemyRef} className={`transition-all ${room_id ? '' : 'hidden'} duration-500 ease-linear`}>
+                            <Car speed={enemySpeed}/>
+                        </div>
                     <div ref={playerRef} className={'transition-all duration-1000 ease-linear'}>
                         <Car speed={playerSpeed}>
                             <span className={'absolute bottom-full text-center left-0 w-1/2 border-white border bg-black text-white p-1 text-sm'}>You</span>
@@ -343,17 +403,27 @@ const GameRoom = () => {
 
             </div>
             <div className={'flex w-full px-5 py-2 justify-evenly mb-2'}>
-                <div className={'flex gap-2 px-2 py-2 border border-black items-center'}>
-                    <Helmet className={'text-black text-5xl scale-x-[-1]'}/>
-                    <h1 className={'font-primary text-5xl'}>Racer num 1</h1>
-                </div>
+                {
+                    room_id
+                    &&
+                    <div className={'flex gap-2 px-2 py-2 border border-black items-center'}>
+                        <Helmet className={'text-black text-5xl scale-x-[-1]'}/>
+                        <h1 className={'font-primary text-5xl'}>{usersNames?.host_nickname}</h1>
+                    </div>
+                }
+
                 <div className={'rounded-full h-full aspect-square border border-black grid place-items-center px-5'}>
                     <h1 className={'text-5xl font-primary'}>{timer}</h1>
                 </div>
-                <div className={'flex flex-row-reverse gap-2 px-2 py-2 border border-black items-center'}>
-                    <Helmet className={'text-black text-5xl'}/>
-                    <h1 className={'font-primary text-5xl'}>Racer num 2</h1>
-                </div>
+
+                {
+                    room_id
+                    &&
+                    <div className={'flex flex-row-reverse gap-2 px-2 py-2 border border-black items-center'}>
+                        <Helmet className={'text-black text-5xl'}/>
+                        <h1 className={'font-primary text-5xl'}>{usersNames?.user_nickname}</h1>
+                    </div>
+                }
             </div>
             <div onClick={() => {
                 textAreaRef.current?.focus()

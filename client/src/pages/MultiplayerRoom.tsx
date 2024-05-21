@@ -7,7 +7,6 @@ import MPModal from "../components/MultiplayerModal";
 import {serverUrl} from "../data/serverUrl";
 import Button from "../components/Button";
 import {userContext} from "../context/UserContext";
-import CheckBox from "../components/CheckBox";
 
 export type TRoom = {
     id: string,
@@ -31,7 +30,6 @@ const MultiplayerRoom = () => {
 
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
     const [newRoomPassword, setNewRoomPassword] = useState('');
-    const [isNewRoomLocked, setIsNewRoomLocked] = useState(false);
 
     const {userId} = useContext(userContext);
 
@@ -110,11 +108,11 @@ const MultiplayerRoom = () => {
                     placeholder="Find a room"
                     type="text"
                     onChange={handleSearch}
-                    className="w-1/4 p-2 mx-auto mb-5 border-2 border-black rounded-2xl"
+                    className="w-1/4 p-2 h-fit my-auto mx-auto mb-5 border-2 border-black rounded-2xl"
                 />
                 <Button handler={() => {
                     setShowCreateRoomModal(true);
-                }}>Create room</Button>
+                }} buttonClassName={'my-3'}>Create room</Button>
             </div>
 
             <div className="flex flex-row gap-10 w-full grow font-secondary min-h-0">
@@ -193,14 +191,9 @@ const MultiplayerRoom = () => {
                 <div
                     className={'absolute top-1/2 left-1/2 p-5 -translate-x-1/2 -translate-y-1/2 border-4 border-black rounded-xl bg-white'}>
                     <h1 className={'font-primary text-2xl'}>Set room settings</h1>
-                    <div className={'w-full flex flex-col gap-2'}>
+                    <div className={'w-full flex flex-col gap-2 my-5'}>
                         <h2 className={'font-primary text-xl'}>Add password or leave empty</h2>
                         <input type="text" onChange={({currentTarget: {value}}) => {setNewRoomPassword(value)}} className={'border border-black rounded-lg text-xl p-2'}/>
-                    </div>
-                        <h2 className={'font-primary text-xl mt-2'}>Lock room ?</h2>
-                    <div className={'w-full flex gap-2'}>
-                        <CheckBox isChecked={isNewRoomLocked} value={'Yes'} id={'isLocked'} onChange={() => {setIsNewRoomLocked(true)}}></CheckBox>
-                        <CheckBox isChecked={!isNewRoomLocked} value={'No'} id={'isLocked'} onChange={() => {setIsNewRoomLocked(false)}}></CheckBox>
                     </div>
                     <div className={'w-full flex gap-2'}>
                         <Button handler={() => {
@@ -236,10 +229,10 @@ const MultiplayerRoom = () => {
                             }).then(res => res.json()).then(data => {
                                 setData(data)
                             })
+                            setShowCreateRoomModal(false);
                         }} buttonClassName={'text-green-500 border-green-500 font-secondary'}>Accept</Button>
                         <Button handler={() => {
                             setShowCreateRoomModal(false);
-                            setIsNewRoomLocked(false);
                             setNewRoomPassword('');
                         }} buttonClassName={'text-red-500 border-red-500 font-secondary'}>Decline</Button>
                     </div>

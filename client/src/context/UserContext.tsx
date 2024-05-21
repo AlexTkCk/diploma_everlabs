@@ -58,7 +58,7 @@ const UserContext = ({children}: TUserContextProps) => {
     }, []);
 
     if (isFetching)
-        return <h1>Is Fetching User Data</h1>
+        return <h1 className={'text-5xl text-center w-full h-full'}>Fetching User Data...</h1>
 
     return (
         <userContext.Provider value={{userId, userData, setUserId, setUserData}}>

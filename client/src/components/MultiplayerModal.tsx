@@ -1,12 +1,9 @@
 import {useState, useEffect, useContext} from "react";
 import { FaRegWindowClose } from "react-icons/fa";
-import hostImg from "../assets/user_avatar.jpeg";
-import MPRoomData from "../data/MPRoomData.json";
 import MPModalRow from "./MPModalRow";
 import {serverUrl} from "../data/serverUrl";
 import {userContext} from "../context/UserContext";
 import {useNavigate} from "react-router";
-import rowMp from "./RowMp";
 import Button from "./Button";
 
 type TMPModal = {
@@ -50,12 +47,6 @@ const MultiplayerModal: React.FC<TMPModal> = ({ room, handleCloseModal }) => {
             className="absolute top-2 right-2 text-4xl cursor-pointer box-content transition-all duration-300 hover:scale-105 active:scale-95"
             onClick={handleCloseModal}
           />
-
-          {/*<img*/}
-          {/*  className="w-32 rounded-full border-2 border-black bg-center"*/}
-          {/*  src={room[0].isHost ? hostImg : room[0].img}*/}
-          {/*  alt="host_img"*/}
-          {/*/>*/}
 
           <h3 className="font-bold text-2xl">{room.name}</h3>
           <div className="flex flex-row justify-between items-center w-full">

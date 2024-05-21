@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useState, useContext } from "react";
+import React, {useState, useContext, useEffect} from "react";
 import { pageVariants } from "../styles/variants";
 import Button from "../components/Button";
 import ai_img from "../assets/ai.svg";
@@ -9,12 +9,26 @@ import { FaFlagCheckered } from "react-icons/fa";
 import { themeContext } from "../context/ThemeContext";
 import { userContext } from "../context/UserContext";
 import Marquee from "react-fast-marquee";
-import recentGames from "../data/recentGames.json";
 import {Link} from "react-router-dom";
+import {serverUrl} from "../data/serverUrl";
 
 const Home = () => {
-  const { userData } = useContext(userContext);
-  const [games, setGames] = useState(recentGames);
+  const { userId, userData } = useContext(userContext);
+  const [games, setGames] = useState<{accuracy: number, sps: number, created_at: string}[]>([]);
+
+  useEffect(() => {
+    fetch(serverUrl + '/games_user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({id: userId})
+    }).then(res => res.json()).then(data => {
+      setGames(data)
+    })
+  }, [])
 
   const { themeValue, themeConfig } = useContext(themeContext);
   return (
@@ -58,9 +72,9 @@ const Home = () => {
               <div
                 className={`inline-flex flex-row gap-2 justify-around items-center w-fit px-5 py-2 ${themeConfig.secondary} text-white font-bold font-primary`}
               >
-                <p className="text-nowrap">Room name: {game.roomName}</p>
-                <p className="text-nowrap">Time: {game.time}</p>
-                <p className="text-nowrap">Speed: {game.speed}</p>
+                <p className="text-nowrap">Date: {game.created_at}</p>
+                <p className="text-nowrap">Accuracy: {game.accuracy}</p>
+                <p className="text-nowrap">SpS: {game.sps}</p>
               </div>
             ))
           ) : (
@@ -82,15 +96,13 @@ const Home = () => {
           </h1>
           <p
             className={
-              "-skew-x-[30deg] font-secondary text-paragraph-lg w-full px-16"
+              "-skew-x-[30deg] font-secondary text-2xl w-full px-16"
             }
           >
             Improve your typing skills on your own
           </p>
           <div className={"-skew-x-[30deg] flex gap-5 py-2 px-16"}>
-            <img className={`w-1/4 aspect-square`} src={racer_img} />
-            <img className={`w-1/4 aspect-square`} src={versus_img} />
-            <img className={`w-1/4 aspect-square`} src={ai_img} />
+            <img className={`w-1/2 mx-auto aspect-square`} src={racer_img} />
           </div>
           <span className={"-skew-x-[30deg]"}>
             <Button
@@ -102,7 +114,7 @@ const Home = () => {
                 " transition-colors duration-250  text-nowrap"
               }
             >
-              <Link to={'/gameRoom'}>
+              <Link to={'/gameRoom'} className={'flex gap-5 items-center'}>
               Practise
               <FaFlagCheckered className={"text-button"} />
               </Link>
@@ -121,14 +133,14 @@ const Home = () => {
         >
           <h1
             className={
-              "-skew-x-[30deg] font-primary text-title-md w-full px-10"
+              "-skew-x-[30deg] font-primary text-4xl w-full px-10"
             }
           >
             Race your friends
           </h1>
           <p
             className={
-              "-skew-x-[30deg] font-secondary text-paragraph-lg w-full px-16"
+              "-skew-x-[30deg] font-secondary text-2xl w-full px-16"
             }
           >
             Create your own racetrack and play with friends
@@ -148,7 +160,7 @@ const Home = () => {
                 " transition-colors duration-250"
               }
             >
-              <Link to={'/multiplayer'}>
+              <Link to={'/multiplayerRoom'} className={'flex gap-5 items-center'}>
                 Challenge
               <div className={"flex justify-center items-center"}>
                 <FaFlagCheckered
