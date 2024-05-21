@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "roomName": "Room 1",
+    "time": 30,
+    "speed": 5
+  },
+  {
+    "id": 2,
+    "roomName": "Room 2",
+    "time": 26,
+    "speed": 6
+  },
+  {
+    "id": 3,
+    "roomName": "Room 3",
+    "time": 31,
+    "speed": 4.5
+  },
+  {
+    "id": 4,
+    "roomName": "Room 4",
+    "time": 31,
+    "speed": 4.5
+  },
+  {
+    "id": 5,
+    "roomName": "Room 5",
+    "time": 31,
+    "speed": 4.5
+  }
+]

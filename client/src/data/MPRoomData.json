@@ -1,0 +1,23 @@
+{
+  "roomName": "My room",
+  "isLocked": false,
+  "password": "123456",
+  "players": [
+    {
+      "id": 1,
+      "isHost": true,
+      "img": "../assets/user_avatar.jpeg",
+      "name": "Player1"
+    },
+    {
+      "id": 2,
+      "isHost": false,
+      "img": "../assets/user_avatar.jpeg",
+      "name": "Player2"
+    }
+  ],
+  "playerCount": {
+    "connectedPlayers": 2,
+    "totalPlayersAllowed": 2
+  }
+}
