@@ -3,7 +3,7 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-
+  config.action_cable.allowed_request_origins = [/http:\/\/*/, /https:\/\/*/, /file:\/\/*/, 'file://', nil]
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
@@ -11,7 +11,7 @@ Rails.application.configure do
 
   config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins 'http://localhost:3000', 'https://6be3-91-244-4-141.ngrok-free.app'
+      origins 'https://diploma-7f61b.web.app', "https://3bee-91-244-4-141.ngrok-free.app"
       resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options]
     end
   end
@@ -87,8 +87,8 @@ Rails.application.configure do
 
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
-  config.hosts << "6be3-91-244-4-141.ngrok-free.appZ"
-  config.hosts << "6be3-91-244-4-141.ngrok-free.app"
+  config.hosts << "3bee-91-244-4-141.ngrok-free.app"
+  config.hosts << "3bee-91-244-4-141.ngrok-free.app"
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 

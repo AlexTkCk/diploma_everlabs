@@ -16,9 +16,23 @@ Rails.application.routes.draw do
   post '/leave_room', to: 'room_action#leave_room'
   get '/get_info_rooms', to: 'room_action#room_info'
   post '/text_race', to: 'room_action#text_for_race'
+  post '/get_text', to: 'room_action#give_text'
   post '/role', to: 'room_action#role'
   post '/record_match', to: 'matches#new_recording'
   post '/edit_profile', to: 'edit_profile#edit_profile'
+  post '/password_enable', to: 'room_action#pass_room'
+  post '/password_disable', to: 'room_action#pass_clear_room'
+  post '/enter_password', to: 'room_action#enter_pass_room'
+  post '/nick_names', to: 'room_action#return_nickname_into_rooms'
+  get '/leaderboard', to: 'matches#show_leaderboard'
+  post '/games_user', to: 'matches#last_games'
+  post '/enter_pass', to: 'room_action#entering_pass_room'
+  post '/lock_unlock', to: 'room_action#lock_unlock'
+  post '/kick', to: 'room_action#kick'
+  post '/leave', to: 'room_action#leave_room'
+  post '/user_info', to: 'room_action#user_info'
+  post '/save_game', to: 'room_action#save_game'
+
   mount ActionCable.server => '/cable'
 
 

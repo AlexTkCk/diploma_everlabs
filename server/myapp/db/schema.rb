@@ -14,6 +14,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_19_184857) do
   create_table "matches", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "accuracy"
+    t.integer "sps"
+    t.integer "user_id"
+    t.text "nickname"
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -38,7 +42,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_19_184857) do
     t.text "nickname"
     t.text "about_me"
     t.text "img_url"
-    t.integer "count_race"
+    t.integer "count_race", default: 0
     t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
     t.boolean "email_auto", default: false

@@ -1,5 +1,5 @@
 class MatchesController < ApplicationController
-
+  skip_before_action :verify_authenticity_token
 
   def new_recording
     data = JSON.parse(request.body.read)
@@ -12,10 +12,19 @@ class MatchesController < ApplicationController
 
   end
 
+  def show_leaderboard
+    matches = Match.select(:created_at, :accuracy, :sps, :user_id, :nickname)
+    render json: matches
+  end
 
 
+  def last_games
+    data = JSON.parse(request.body.read)
+    user_id = data["id"]
+    matches = Match.where(user_id: user_id).select(:created_at, :accuracy, :sps)
+    render json: matches
 
-
+  end
 
 
 
