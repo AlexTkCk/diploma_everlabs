@@ -217,6 +217,16 @@ const MultiplayerRoom = () => {
                                     },
                                     body: JSON.stringify({room_id: userId, password: newRoomPassword})
                                 })
+                            } else {
+                                fetch(serverUrl + '/password_disable', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'ngrok-skip-browser-warning': 'true',
+                                        'Accept': 'application/json',
+                                    },
+                                    body: JSON.stringify({room_id: userId, password: newRoomPassword})
+                                })
                             }
 
                             fetch(serverUrl + '/get_info_rooms', {

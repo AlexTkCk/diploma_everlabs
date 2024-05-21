@@ -74,7 +74,7 @@ const GameRoom = () => {
     const [caret, setCaret] = useState(0);
     const [text, setText] = useState<{value: string, state: charStateEnum}[]>(plaintext.split('').map((char: string) => ({value: char, state: charStateEnum.NEUTRAL})));
     const [showPreGamePopUp, setShowPreGamePopUp] = useState(true);
-    const [usersNames, setUsersNames] = useState({host_nickname: 'Fetching...', user_nickname: 'Fetching...'});
+    const [usersNamesAndPhotos, setUsersNamesAndPhotos] = useState({host_nickname: 'Fetching...', user_nickname: 'Fetching...', host_photo: null, user_photo: null});
 
     const [playerSpeed, setPlayerSpeed] = useState(0);
     const [enemySpeed, setEnemySpeed] = useState(0);
@@ -159,7 +159,7 @@ const GameRoom = () => {
                 },
                 body: JSON.stringify({room_id})
             }).then(res => res.json()).then(data => {
-                setUsersNames(data)
+                setUsersNamesAndPhotos(data)
             })
 
             fetch(serverUrl + "/get_text", {
@@ -217,6 +217,17 @@ const GameRoom = () => {
                 {
                     received(data: any) {
                         if (data.notice) {
+                            fetch(serverUrl + "/nick_names", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "ngrok-skip-browser-warning": "true",
+                                    Accept: "application/json",
+                                },
+                                body: JSON.stringify({room_id})
+                            }).then(res => res.json()).then(data => {
+                                setUsersNamesAndPhotos(data)
+                            })
                             setShowPreGamePopUp(false);
                             startTimer();
                         }
@@ -407,8 +418,14 @@ const GameRoom = () => {
                     room_id
                     &&
                     <div className={'flex gap-2 px-2 py-2 border border-black items-center'}>
-                        <Helmet className={'text-black text-5xl scale-x-[-1]'}/>
-                        <h1 className={'font-primary text-5xl'}>{usersNames?.host_nickname}</h1>
+                        {
+                            usersNamesAndPhotos?.host_photo ?
+                                <img src={usersNamesAndPhotos.host_photo} className={'w-12 aspect-square'}/>
+                                :
+                                <Helmet className={'text-black text-5xl scale-x-[-1]'}/>
+                        }
+
+                        <h1 className={'font-primary text-5xl'}>{usersNamesAndPhotos?.host_nickname || 'Anonymous'}</h1>
                     </div>
                 }
 
@@ -420,8 +437,13 @@ const GameRoom = () => {
                     room_id
                     &&
                     <div className={'flex flex-row-reverse gap-2 px-2 py-2 border border-black items-center'}>
-                        <Helmet className={'text-black text-5xl'}/>
-                        <h1 className={'font-primary text-5xl'}>{usersNames?.user_nickname}</h1>
+                        {
+                            usersNamesAndPhotos?.user_photo ?
+                                <img src={usersNamesAndPhotos.user_photo} className={'w-12 aspect-square'}/>
+                                :
+                                <Helmet className={'text-black text-5xl'}/>
+                        }
+                        <h1 className={'font-primary text-5xl'}>{usersNamesAndPhotos?.user_nickname || 'Anonymous'}</h1>
                     </div>
                 }
             </div>

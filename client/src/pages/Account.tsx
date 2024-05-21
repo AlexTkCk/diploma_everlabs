@@ -85,11 +85,19 @@ const Account = () => {
       <div className="relative h-full w-3/4 flex flex-col gap-8 border-2 border-slate-900 p-8 pb-12 rounded-md shadow-xl bg-account bg-contain bg-repeat hover:">
         <h2 className="text-5xl">Driver Licence</h2>
         <div className="h-full flex flex-row gap-10">
-          <img
-            className="h-[80%] rounded-md border-2 border-slate-900"
-            src={data.imageUrl}
-            alt="user_avatar"
-          />
+          {
+            data.imageUrl ?
+                <img
+                    className="h-[80%] rounded-md border-2 border-slate-900"
+                    src={data.imageUrl}
+                    alt="user_avatar"
+                />
+                :
+                <div className="h-[80%] w-2/5 rounded-md border-2 border-slate-900 bg-gray-500">
+
+                </div>
+          }
+
           <div className="flex flex-col gap-5 font-primary text-xl grow min-w-0">
             <div className={'flex gap-5'}>
               <p>

@@ -39,7 +39,28 @@ const Home = () => {
       animate={"animate"}
       exit={"exit"}
     >
-      {!userData && (
+      {!!userData ?
+          <div
+              className={`flex flex-row items-center justify-around gap-5 h-32 ${themeConfig.accent} overflow-hidden`}
+          >
+            <Marquee pauseOnHover={true} speed={100} autoFill>
+              {games.length ? (
+                  games.map((game) => (
+                      <div
+                          className={`inline-flex flex-row gap-2 justify-around items-center w-fit px-5 py-2 ${themeConfig.secondary} text-white font-bold font-primary`}
+                      >
+                        <p className="text-nowrap">Date: {game.created_at}</p>
+                        <p className="text-nowrap">Accuracy: {game.accuracy}</p>
+                        <p className="text-nowrap">SpS: {game.sps}</p>
+                      </div>
+                  ))
+              ) : (
+                  <p>Games list is empty</p>
+              )}
+            </Marquee>
+          </div>
+          :
+        (
         <div
           className={
             "my-5 flex justify-between border-t border-b border-black px-5 py-2"
@@ -58,30 +79,12 @@ const Home = () => {
               "hover:bg-black hover:text-white  transition duration-300"
             }
           >
-            Create account
+            <Link to={'/signup'}>
+              Create account
+            </Link>
           </Button>
         </div>
       )}
-
-      <div
-        className={`flex flex-row items-center justify-around gap-5 h-32 ${themeConfig.accent} overflow-hidden`}
-      >
-        <Marquee pauseOnHover={true} speed={100} autoFill>
-          {games.length ? (
-            games.map((game) => (
-              <div
-                className={`inline-flex flex-row gap-2 justify-around items-center w-fit px-5 py-2 ${themeConfig.secondary} text-white font-bold font-primary`}
-              >
-                <p className="text-nowrap">Date: {game.created_at}</p>
-                <p className="text-nowrap">Accuracy: {game.accuracy}</p>
-                <p className="text-nowrap">SpS: {game.sps}</p>
-              </div>
-            ))
-          ) : (
-            <p>Games list is empty</p>
-          )}
-        </Marquee>
-      </div>
 
       <div className={"py-5 grow flex justify-center gap-10"}>
         <div
