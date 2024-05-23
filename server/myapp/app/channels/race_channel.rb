@@ -6,7 +6,6 @@ class RaceChannel < ApplicationCable::Channel
     puts "Client subscribed to race channel for room #{room_id}"
   end
 
-
   def start_game(data)
     room_id = data["room_id"]
     room = Room.find_by(id: room_id)
@@ -15,9 +14,6 @@ class RaceChannel < ApplicationCable::Channel
 
     ActionCable.server.broadcast("race_channel_#{room_id}", message)
   end
-
-
-
 
   def speed(data)
     user_id = data["user_id"]
@@ -52,7 +48,6 @@ class RaceChannel < ApplicationCable::Channel
     }
 
     ActionCable.server.broadcast("race_channel_#{room_id}", message)
-    end
-
+  end
 
 end

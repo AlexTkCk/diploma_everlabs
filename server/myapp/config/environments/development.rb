@@ -11,7 +11,7 @@ Rails.application.configure do
 
   config.middleware.insert_before 0, Rack::Cors do
     allow do
-      origins 'https://diploma-7f61b.web.app', "https://3bee-91-244-4-141.ngrok-free.app"
+      origins 'https://diploma-7f61b.web.app', "https://456a-185-3-148-234.ngrok-free.app"
       resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options]
     end
   end
@@ -24,20 +24,20 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_options = {from: 'etomoyputninza@gmail.com'}
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
-    port:                 587,
-    domain:               'f08c-78-137-13-80.ngrok-free.app',
-    user_name:            'etomoyputninza@gmail.com',
-    password:             'Aleksey0077',
-    authentication:       'plain',
-    enable_starttls_auto: true  }
   # config.action_mailer.smtp_settings = {
-  #   address:              'localhost',
-  #   port:                 1025,
-  #   domain:               'localhost',
-  #   enable_starttls_auto: false
-  # }
+  #   address:              'smtp.gmail.com',
+  #   port:                 587,
+  #   domain:               'f08c-78-137-13-80.ngrok-free.app',
+  #   user_name:            'etomoyputninza@gmail.com',
+  #   password:             'Aleksey0077',
+  #   authentication:       'plain',
+  #   enable_starttls_auto: true  }
+  config.action_mailer.smtp_settings = {
+    address:              'localhost',
+    port:                 1025,
+    domain:               'localhost',
+    enable_starttls_auto: false
+  }
 
 
   # Show full error reports.
@@ -87,8 +87,8 @@ Rails.application.configure do
 
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
-  config.hosts << "3bee-91-244-4-141.ngrok-free.app"
-  config.hosts << "3bee-91-244-4-141.ngrok-free.app"
+  config.hosts << "456a-185-3-148-234.ngrok-free.app"
+  config.hosts << "456a-185-3-148-234.ngrok-free.app"
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 

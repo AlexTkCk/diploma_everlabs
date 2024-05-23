@@ -11,14 +11,8 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_05_19_184857) do
-  create_table "matches", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "accuracy"
-    t.integer "sps"
-    t.integer "user_id"
-    t.text "nickname"
-  end
+# Could not dump table "matches" because of following StandardError
+#   Unknown type 'REAL' for column 'accuracy'
 
   create_table "rooms", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -32,8 +26,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_19_184857) do
     t.text "host_id", default: "0"
     t.text "user_id", default: "0"
     t.text "text"
-    t.integer "speed_1", default: 0
-    t.integer "speed_2", default: 0
   end
 
   create_table "users", force: :cascade do |t|

@@ -9,11 +9,18 @@ class EditProfileController < ApplicationController
     img_url = data['img_url']
 
     user = User.find_by(id: id)
-    user.update(nickname: nickname, about_me: about_me, img_url: img_url)
+
+    if user.nil?
+      render json: { error: 'User not found' }, status: :not_found
+      return
+    end
+
+    if user.update(nickname: nickname, about_me: about_me, img_url: img_url)
+      render json: { message: 'Profile updated successfully', user: user }
+    else
+      render json: { error: 'Failed to update profile', errors: user.errors.full_messages }, status: :unprocessable_entity
+    end
   end
-
-
-
 
 
 end
