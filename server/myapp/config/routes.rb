@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
   post '/user/signup', to: 'users#signup'
   post '/user/login', to: 'users#login'
-  post '/re-entry', to: 're_entry#return_id'
-  get  '/register', to: 'users#register'
+  get '/re-entry', to: 're_entry#return_id'
   get '/auth/:provider/callback', to: 'google_auto#reg'
   post '/email_auth', to: 'email_auth#send_mail'
   get '/email_auth/:token/:id', to: 'email_auth#add_auth'
@@ -11,14 +10,28 @@ Rails.application.routes.draw do
   get '/password_recovery/:token/:id', to: 'password_recovery#add_new_pass'
   post '/password/change/:token/:id', to: 'password_recovery#change_password'
   get '/test', to: 're_entry#testing'
-  post '/createroom', to: 'room_action#entering_own_room'
-  post '/leave_room', to: 'room_action#leave_room'
+  post '/enter_own_room', to: 'room_action#entering_own_room'
+  patch '/enter_room', to: 'room_action#entering_other_room'
+  patch '/leave_room', to: 'room_action#leave_room'
   get '/get_info_rooms', to: 'room_action#room_info'
-  get '/text_race', to: 'room_action#text_for_race'
+  post '/text_race', to: 'room_action#text_for_race'
+  get '/get_text', to: 'room_action#give_text'
+  get '/role', to: 'room_action#role'
+  post '/record_match', to: 'matches#new_recording'
+  patch '/edit_profile', to: 'edit_profile#edit_profile'
+  patch '/password_enable', to: 'room_action#pass_room'
+  patch '/password_disable', to: 'room_action#pass_clear_room'
+  post '/enter_password', to: 'room_action#enter_pass_room'
+  get '/nick_names', to: 'room_action#return_nickname_into_rooms'
+  get '/leaderboard', to: 'matches#show_leaderboard'
+  get '/games_user', to: 'matches#last_games'
+  patch '/enter_pass', to: 'room_action#entering_pass_room'
+  patch '/lock_unlock', to: 'room_action#lock_unlock'
+  patch '/kick', to: 'room_action#kick'
+  patch '/leave', to: 'room_action#leave_room'
+  get '/user_info', to: 'room_action#user_info'
+  post '/save_game', to: 'room_action#save_game'
+
   mount ActionCable.server => '/cable'
-
-
-
-
 
 end
