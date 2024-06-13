@@ -9,6 +9,13 @@ class RaceChannel < ApplicationCable::Channel
 
     puts "Client subscribed to race channel for room #{room_id}"
   end
+
+  def rooms_info
+    stream_from "room_info"
+
+    puts "Client subscribed to race channel for rooms info"
+  end
+
   def unsubscribed
     room_id = params[:room_id]
     user_id = params[:user_id]
@@ -69,7 +76,7 @@ class RaceChannel < ApplicationCable::Channel
       status: "entered"
     }
 
-    ActionCable.server.broadcast("race_channel_#{room_id}", message)
+    ActionCable.server.broadcast("room_info", message)
   end
 
   def user_left(room_id, user_id)
@@ -79,7 +86,7 @@ class RaceChannel < ApplicationCable::Channel
       status: "left"
     }
 
-    ActionCable.server.broadcast("race_channel_#{room_id}", message)
+    ActionCable.server.broadcast("room_info", message)
   end
 
 end
