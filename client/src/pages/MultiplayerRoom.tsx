@@ -7,6 +7,8 @@ import MPModal from "../components/MultiplayerModal";
 import {serverUrl} from "../data/serverUrl";
 import Button from "../components/Button";
 import {userContext} from "../context/UserContext";
+import {consumer} from "../actioncabe";
+import {Channel} from "@rails/actioncable";
 
 export type TRoom = {
     id: string,
@@ -31,6 +33,8 @@ const MultiplayerRoom = () => {
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
     const [newRoomPassword, setNewRoomPassword] = useState('');
 
+    const [ws, setWs] = useState<Channel | null>(null);
+
     const {userId} = useContext(userContext);
 
     useEffect(() => {
@@ -44,6 +48,32 @@ const MultiplayerRoom = () => {
         }).then(res => res.json()).then(data => {
             setData(data)
         })
+
+        const subscription = consumer.subscriptions.create(
+            { channel: "RoomsChannel"},
+            {
+                received(data: any) {
+                    if (data.message) {
+                        fetch(serverUrl + '/get_info_rooms', {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'ngrok-skip-browser-warning': 'true',
+                                'Accept': 'application/json',
+                            },
+                        }).then(res => res.json()).then(data => {
+                            setData(data);
+                            setActiveRoom(prev => data.find((room: TRoom) => room.id === prev?.id))
+                        })
+                    }
+                }
+            }
+        );
+        setWs(subscription);
+        return () => {
+            subscription.unsubscribe();
+        };
+
     }, []);
 
     const handleSort = (sortBy: string) => {
@@ -209,7 +239,7 @@ const MultiplayerRoom = () => {
 
                             if (newRoomPassword !== '') {
                                 fetch(serverUrl + '/password_enable', {
-                                    method: 'POST',
+                                    method: 'PATCH',
                                     headers: {
                                         'Content-Type': 'application/json',
                                         'ngrok-skip-browser-warning': 'true',

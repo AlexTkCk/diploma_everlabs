@@ -5,11 +5,12 @@ import { GiFullMotorcycleHelmet as Helmet } from "react-icons/gi";
 import {FaFlag} from "react-icons/fa";
 import SessionLineChar, {SessionData} from "../components/SessionLineChar";
 import Car from "../components/Car";
-import {serverUrl, WSSUrl} from "../data/serverUrl";
+import {serverUrl} from "../data/serverUrl";
 import {userContext} from "../context/UserContext";
-import {Channel, createConsumer} from "@rails/actioncable";
+import {Channel} from "@rails/actioncable";
 import {useParams} from "react-router-dom";
 import PreGamePopUp from "../components/PreGamePopUp";
+import {consumer} from "../actioncabe";
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz ,.:;-'
 
@@ -52,9 +53,6 @@ const charStateMap = {
     [charStateEnum.NEUTRAL]: 'text-white'
 }
 
-const actionCableUrl = WSSUrl + '/cable';
-
-const consumer = createConsumer(actionCableUrl);
 const plaintext = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
 const timeDuration = 30;
@@ -75,6 +73,7 @@ const GameRoom = () => {
     const [text, setText] = useState<{value: string, state: charStateEnum}[]>(plaintext.split('').map((char: string) => ({value: char, state: charStateEnum.NEUTRAL})));
     const [showPreGamePopUp, setShowPreGamePopUp] = useState(true);
     const [usersNames, setUsersNames] = useState({host_nickname: 'Fetching...', user_nickname: 'Fetching...'});
+    const [usersImgs, setUsersImgs] = useState({host_img: null, user_img: null});
 
     const [playerSpeed, setPlayerSpeed] = useState(0);
     const [enemySpeed, setEnemySpeed] = useState(0);
@@ -137,53 +136,61 @@ const GameRoom = () => {
             if (ws) ws.unsubscribe();
         }
 
-        setSessionChartData(prev => {
-             return [...prev, {
-                 name: Math.abs(timer - timeDuration) + 's',
-                 sps: Math.round(sessionData.totalSymbols / (Math.abs(timer - timeDuration) + 0.0000001) * 100) / 100,
-                 accuracy: Math.round(sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001) * 100) / 100
-             }]
-        })
+        if (!isModalOpen) {
+            setSessionChartData(prev => {
+                return [...prev, {
+                    name: Math.abs(timer - timeDuration) + 's',
+                    sps: Math.round(sessionData.totalSymbols / (Math.abs(timer - timeDuration) + 0.0000001) * 100) / 100,
+                    accuracy: Math.round(sessionData.correctSymbols / (sessionData.totalSymbols / 100 + 0.0000000001) * 100) / 100
+                }]
+            })
+        }
     }, [timer])
 
 
     useEffect(() => {
         if (room_id) {
 
-            fetch(serverUrl + "/nick_names", {
-                method: "POST",
+            fetch(serverUrl + `/nick_names?room_id=${room_id}`, {
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "ngrok-skip-browser-warning": "true",
                     Accept: "application/json",
                 },
-                body: JSON.stringify({room_id})
             }).then(res => res.json()).then(data => {
-                setUsersNames(data)
+                if (data.user_nickname) {
+                    setUsersNames({
+                        host_nickname: data.host_nickname[0],
+                        user_nickname: data.user_nickname[0],
+                    })
+                    setUsersImgs({
+                        host_img: data.host_nickname[1],
+                        user_img: data.user_nickname[1],
+                    })
+                }
             })
 
-            fetch(serverUrl + "/get_text", {
-                method: "POST",
+            fetch(serverUrl + `/get_text?room_id=${room_id}`, {
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "ngrok-skip-browser-warning": "true",
                     Accept: "application/json",
                 },
-                body: JSON.stringify({room_id})
             })
                 .then((res) => res.json())
                 .then(({text}) => {
                     setText(text.split('').map((char: string) => ({value: char, state: charStateEnum.NEUTRAL})))
                 })
 
-            fetch(serverUrl + "/role", {
-                method: "POST",
+            fetch(serverUrl + `/role?room_id=${room_id}`, {
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                     "ngrok-skip-browser-warning": "true",
                     Accept: "application/json",
                 },
-                body: JSON.stringify({room_id})
             })
                 .then((res) => res.json())
                 .then((data) => {
@@ -217,15 +224,39 @@ const GameRoom = () => {
                 {
                     received(data: any) {
                         if (data.notice) {
+                            fetch(serverUrl + `/nick_names?room_id=${room_id}`, {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "ngrok-skip-browser-warning": "true",
+                                    Accept: "application/json",
+                                },
+                            }).then(res => res.json()).then(data => {
+                                setUsersNames({
+                                    host_nickname: data.host_nickname[0],
+                                    user_nickname: data?.user_nickname[0],
+                                })
+                                setUsersImgs({
+                                    host_img: data.host_nickname[1],
+                                    user_img: data?.user_nickname[1],
+                                })
+                            })
                             setShowPreGamePopUp(false);
                             startTimer();
+                            return;
                         }
 
                         const {user_id, speed_change} = data;
-                        if (user_id.toString() === userId.toString())
-                            setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
-                        else
-                            setEnemySpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                        if (speed_change) {
+                            if (user_id?.toString() === userId?.toString()) {
+                                setPlayerSpeed(prev => prev + speed_change < 0 ? 0 : prev + speed_change);
+                            }
+                            else {
+                                setEnemySpeed(prev => {
+                                    return prev + speed_change < 0 ? 0 : prev + speed_change
+                                });
+                            }
+                        }
                     }
                 }
             );
@@ -301,7 +332,7 @@ const GameRoom = () => {
         })
 
         fetch(serverUrl + "/leave", {
-            method: "POST",
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
                 "ngrok-skip-browser-warning": "true",
@@ -407,7 +438,12 @@ const GameRoom = () => {
                     room_id
                     &&
                     <div className={'flex gap-2 px-2 py-2 border border-black items-center'}>
-                        <Helmet className={'text-black text-5xl scale-x-[-1]'}/>
+                        {
+                            usersImgs.host_img ?
+                                <img src={usersImgs.host_img} alt="" className={'w-14 aspect-square rounded-full'}/>
+                                :
+                                <Helmet className={'text-black text-5xl scale-x-[-1]'}/>
+                        }
                         <h1 className={'font-primary text-5xl'}>{usersNames?.host_nickname}</h1>
                     </div>
                 }
@@ -420,7 +456,12 @@ const GameRoom = () => {
                     room_id
                     &&
                     <div className={'flex flex-row-reverse gap-2 px-2 py-2 border border-black items-center'}>
-                        <Helmet className={'text-black text-5xl'}/>
+                        {
+                            usersImgs.user_img ?
+                                <img src={usersImgs.user_img} alt="" className={'w-14 aspect-square rounded-full'}/>
+                                :
+                                <Helmet className={'text-black text-5xl'}/>
+                        }
                         <h1 className={'font-primary text-5xl'}>{usersNames?.user_nickname}</h1>
                     </div>
                 }

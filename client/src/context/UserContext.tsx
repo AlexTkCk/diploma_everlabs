@@ -29,14 +29,13 @@ const UserContext = ({children}: TUserContextProps) => {
     useEffect(() => {
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
-            fetch(serverUrl + '/re-entry', {
-                method: 'POST',
+            fetch(serverUrl + `/re-entry?token=${jwt}`, {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     'ngrok-skip-browser-warning': 'true',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify({'token': jwt})
             }).then(res => res.json()).then(data => {
                 if (data.id) {
                     setUserId(data.id);
@@ -55,7 +54,7 @@ const UserContext = ({children}: TUserContextProps) => {
         } else {
             setIsFetching(false);
         }
-    }, []);
+    }, [userId]);
 
     if (isFetching)
         return <h1 className={'text-5xl text-center w-full h-full'}>Fetching User Data...</h1>

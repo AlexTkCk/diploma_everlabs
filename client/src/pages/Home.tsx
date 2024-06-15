@@ -1,8 +1,7 @@
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 import React, {useState, useContext, useEffect} from "react";
 import { pageVariants } from "../styles/variants";
 import Button from "../components/Button";
-import ai_img from "../assets/ai.svg";
 import racer_img from "../assets/racer.svg";
 import versus_img from "../assets/versus.svg";
 import { FaFlagCheckered } from "react-icons/fa";
@@ -11,20 +10,21 @@ import { userContext } from "../context/UserContext";
 import Marquee from "react-fast-marquee";
 import {Link} from "react-router-dom";
 import {serverUrl} from "../data/serverUrl";
+import {useNavigate} from "react-router";
 
 const Home = () => {
-  const { userId, userData } = useContext(userContext);
+  const { userId, userData} = useContext(userContext);
   const [games, setGames] = useState<{accuracy: number, sps: number, created_at: string}[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(serverUrl + '/games_user', {
-      method: 'POST',
+    fetch(serverUrl + `/games_user?id=${userId}`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
         'Accept': 'application/json'
-      },
-      body: JSON.stringify({id: userId})
+      }
     }).then(res => res.json()).then(data => {
       setGames(data)
     })
@@ -53,7 +53,9 @@ const Home = () => {
             </span>
           </p>
           <Button
-            handler={() => {}}
+            handler={() => {
+              navigate('/signUp')
+            }}
             buttonClassName={
               "hover:bg-black hover:text-white  transition duration-300"
             }
@@ -68,8 +70,8 @@ const Home = () => {
       >
         <Marquee pauseOnHover={true} speed={100} autoFill>
           {games.length ? (
-            games.map((game) => (
-              <div
+            games.map((game, index) => (
+              <div key={index}
                 className={`inline-flex flex-row gap-2 justify-around items-center w-fit px-5 py-2 ${themeConfig.secondary} text-white font-bold font-primary`}
               >
                 <p className="text-nowrap">Date: {game.created_at}</p>

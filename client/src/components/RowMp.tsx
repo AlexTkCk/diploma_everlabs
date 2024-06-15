@@ -21,14 +21,12 @@ const RowMp: React.FC<TRowMp> = ({
 }) => {
 
   const {userId} = useContext(userContext);
-  const isHost = dataMp.host_id === userId.toString();
+  const isHost = dataMp.host_id.toString() === userId.toString();
   const handleRowClick = () => {
     if (handler) {
       handler();
     }
   };
-  const [isLocked, setIsLocked] = useState(dataMp.game_lock_status);
-
   return (
     <div
       className={`${isHost ? 'shadow-sm shadow-black' : ''} ${dataMp.game_lock_status ? (isHost ? '' : 'opacity-50 pointer-events-none') : ''} flex flex-row justify-around text-center ml-2 text-xl transition-all items-center h-10  active:bg-gray-200 cursor-pointer`}
@@ -44,12 +42,12 @@ const RowMp: React.FC<TRowMp> = ({
           <ImCheckboxChecked className="mx-auto text-3xl h-full" />
         ) : null}
       </span>
-      <span className="w-1/5 ">
-        {isLocked ? (
+      <span className={`w-1/5 ${isHost ? '' : 'pointer-events-none'}`}>
+        {dataMp.game_lock_status ? (
           <FaLock onClick={(e) => {
             e.stopPropagation();
             fetch(serverUrl + '/lock_unlock', {
-              method: 'POST',
+              method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json',
                 'ngrok-skip-browser-warning': 'true',
@@ -57,13 +55,12 @@ const RowMp: React.FC<TRowMp> = ({
               },
               body: JSON.stringify({room_id: dataMp.id})
             })
-            setIsLocked(false)
           }} className="text-3xl mx-auto h-full" />
         ) : (
           <FaLockOpen onClick={(e) => {
             e.stopPropagation();
             fetch(serverUrl + '/lock_unlock', {
-              method: 'POST',
+              method: 'PATCH',
               headers: {
                 'Content-Type': 'application/json',
                 'ngrok-skip-browser-warning': 'true',
@@ -71,7 +68,6 @@ const RowMp: React.FC<TRowMp> = ({
               },
               body: JSON.stringify({room_id: dataMp.id})
             })
-            setIsLocked(true)
           }} className="text-3xl mx-auto h-full" />
         )}
       </span>

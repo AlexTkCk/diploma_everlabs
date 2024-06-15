@@ -8,6 +8,7 @@ import { userContext } from "../context/UserContext";
 import { useNavigate } from "react-router";
 import { v4 as uuid4 } from "uuid";
 import {serverUrl} from "../data/serverUrl";
+import userAvatarPlaceholder from '../assets/user_avatar.jpeg'
 
 const Account = () => {
   const { userId, userData, setUserId, setUserData } = useContext(userContext);
@@ -48,7 +49,7 @@ const Account = () => {
     closeEditModal();
 
     fetch(serverUrl + '/edit_profile', {
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'ngrok-skip-browser-warning': 'true',
@@ -84,15 +85,15 @@ const Account = () => {
 
       <div className="relative h-full w-3/4 flex flex-col gap-8 border-2 border-slate-900 p-8 pb-12 rounded-md shadow-xl bg-account bg-contain bg-repeat hover:">
         <h2 className="text-5xl">Driver Licence</h2>
-        <div className="h-full flex flex-row gap-10">
+        <div className="h-full flex flex-row gap-10 min-h-0">
           <img
-            className="h-[80%] rounded-md border-2 border-slate-900"
-            src={data.imageUrl}
-            alt="user_avatar"
+              className="h-[80%] rounded-md border-2 border-slate-900"
+              src={data.imageUrl ? data.imageUrl : userAvatarPlaceholder}
+              alt="user_avatar"
           />
-          <div className="flex flex-col gap-5 font-primary text-xl grow min-w-0">
+          <div className="flex flex-col gap-5 font-primary text-xl grow min-w-0 min-h-0">
             <div className={'flex gap-5'}>
-              <p>
+            <p>
                 <span className="font-bold font-primary">Name:</span>
                 {userData?.name}
               </p>
@@ -105,12 +106,10 @@ const Account = () => {
             <p className="text-xl text-justify w-full text-wrap break-all grow min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-[#339989] scrollbar-track-slate-300">
               <span className={"font-bold "}>About me:</span> {data.about}
             </p>
-            <p className="text-end text-md font-bold ">
+            <p className="text-end text-md font-bold">
               Started playing: <br /> {data.created_at}
             </p>
           </div>
-
-
           <Button
             buttonClassName={`absolute top-5 right-5 bg-slate-200 hover:shadow-buttonHover_md hover:shadow-blue-500 transition-all duration-500 hover:text-white ${themeConfig.accent} ${themeConfig.info}`}
             handler={openEditModal}

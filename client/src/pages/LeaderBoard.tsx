@@ -3,14 +3,15 @@ import { pageVariants } from "../styles/variants";
 import { motion } from "framer-motion";
 import RowLb from "../components/RowLb";
 import Checkbox from "../components/CheckBox";
-import dataLB from "../data/leaderboardData.json";
 import {serverUrl} from "../data/serverUrl";
+import {TRoom} from "./MultiplayerRoom";
 
 type TData = {
   id: number;
   nickname: string;
   accuracy: number;
   sps: number;
+  created_at: string;
 };
 
 const LeaderBoard = () => {
@@ -32,7 +33,7 @@ const LeaderBoard = () => {
         'Accept': 'application/json',
       }
     }).then(res => res.json()).then(data => {
-      setData(data)
+      setData(data.sort((a: TData, b: TData) => Date.parse(b.created_at) - Date.parse(a.created_at)))
     })
   }, [])
 
@@ -46,19 +47,19 @@ const LeaderBoard = () => {
     let newData = [...data];
 
     if (sortBy === "accuracy") {
-      newData = sortByAccuracy
-        ? newData.sort((a, b) => a.accuracy - b.accuracy)
-        : newData.sort((a, b) => b.accuracy - a.accuracy);
+      newData = !sortByAccuracy
+        ? newData.sort((a, b) => b.accuracy - a.accuracy)
+        : newData.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
       setSortByAccuracy(!sortByAccuracy);
       setSortBySps(false);
     } else if (sortBy === "sps") {
-      newData = sortBySps
-        ? newData.sort((a, b) => a.sps - b.sps)
-        : newData.sort((a, b) => b.sps - a.sps);
+      newData = !sortBySps
+        ? newData.sort((a, b) => b.sps - a.sps)
+        : newData.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
       setSortBySps(!sortBySps);
       setSortByAccuracy(false);
     }
-    setData(newData);
+    setData(newData)
   };
 
 
@@ -92,9 +93,9 @@ const LeaderBoard = () => {
             <div className={"h-auto flex flex-col gap-5"}>
               <hr className="border-black" />
               {filteredData.length ? (
-                filteredData.map((player) => (
+                filteredData.map((player, index) => (
                   <motion.div
-                    key={player.id}
+                    key={index}
                     layout
                     transition={{ type: "spring", damping: 25, stiffness: 200 }}
                     initial={{ opacity: 0 }}

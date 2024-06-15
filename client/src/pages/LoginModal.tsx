@@ -22,7 +22,7 @@ const LoginModal = () => {
     if (id && jwt) {
       setUserId(id);
       localStorage.setItem("jwt", jwt);
-      navigate("/account");
+      navigate("/");
     }
   }, []);
 
