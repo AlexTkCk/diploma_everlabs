@@ -20,22 +20,22 @@ class MatchesController < ApplicationController
     else
       render json: { error: 'Failed to save recording', errors: match.errors.full_messages }, status: :unprocessable_entity
     end
+  end
 
   def show_leaderboard
     matches = Match.select(:created_at, :accuracy, :sps, :user_id, :nickname)
     render json: matches
   end
 
-    def last_games
-      user = User.find_by(id: params[:id])
+  def last_games
+    user = User.find_by(id: params[:id])
 
-      if user.nil?
-        render json: { error: 'User not found' }, status: :not_found
-        return
-      end
-
-      matches = Match.where(user_id: user.id).select(:created_at, :accuracy, :sps)
-      render json: matches
+    if user.nil?
+      render json: { error: 'User not found' }, status: :not_found
+      return
     end
 
+    matches = Match.where(user_id: user.id).select(:created_at, :accuracy, :sps)
+    render json: matches
+  end
 end

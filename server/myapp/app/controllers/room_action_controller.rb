@@ -19,6 +19,7 @@ class RoomActionController < ApplicationController
     else
       if existing_room.update(host_id: id, players_count: 1)
         render json: { message: 'Access granted to enter your room', status: '5' }
+        ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
       else
         render json: { error: 'Failed to update room' }, status: :unprocessable_entity
       end
@@ -40,10 +41,12 @@ class RoomActionController < ApplicationController
     if id == existing_room.host_id
       existing_room.update(host_id: 0, user_id: 0, players_count: 0, game_lock_status: false)
       render json: { message: 'You have left your room' }
+      ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
     elsif id == existing_room.user_id
       existing_room.update(user_id: 0, game_lock_status: false)
       existing_room.update(players_count: 1) unless existing_room.host_id == 0
       render json: { message: 'You have left the room' }
+      ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
     else
       render json: { error: 'You are not a member of this room' }, status: :forbidden
     end
@@ -65,6 +68,7 @@ class RoomActionController < ApplicationController
 
     if room.update(password: hashed_password, password_status: 1)
       render json: { message: 'Password set successfully' }
+      ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
     else
       render json: { error: 'Failed to update room password' }, status: :unprocessable_entity
     end
@@ -83,6 +87,7 @@ class RoomActionController < ApplicationController
 
     if room.update(password: nil, password_status: 0)
       render json: { message: 'Password cleared successfully' }
+      ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
     else
       render json: { error: 'Failed to clear room password' }, status: :unprocessable_entity
     end
@@ -119,6 +124,7 @@ class RoomActionController < ApplicationController
       if room.user_id.nil? || room.user_id == 0
         room.update(user_id: user_id, players_count: room.players_count + 1)
         render json: { message: 'User entered successfully', status: '3' }
+        ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
       else
         render json: { error: 'Room is full', status: '6' }, status: :unprocessable_entity
       end
@@ -138,7 +144,7 @@ class RoomActionController < ApplicationController
       return
     end
 
-    if room.user_id != 0
+    if room.user_id != "0"
       render json: { error: 'Room is already occupied', status: '4' }, status: :unprocessable_entity
       return
     end
@@ -151,6 +157,7 @@ class RoomActionController < ApplicationController
     room.update(user_id: id, players_count: 2)
 
     render json: { message: 'User entered successfully', status: '3' }
+    ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
   end
 
   def lock_unlock
@@ -167,6 +174,7 @@ class RoomActionController < ApplicationController
     room.update(game_lock_status: new_status)
 
     render json: { message: "Game lock status updated to #{new_status}" }
+    ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
   end
 
 
@@ -186,6 +194,7 @@ class RoomActionController < ApplicationController
       if room.user_id == 0
         room.update(user_id: id, players_count: 2)
         render json: { message: 'User entered successfully', status: '3' }
+        ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
       else
         render json: { error: 'Room is already occupied', status: '5' }
       end
@@ -235,6 +244,7 @@ class RoomActionController < ApplicationController
     if room
       room.update(user_id: 0, players_count: 1)
       render json: { message: 'User kicked successfully' }
+      ActionCable.server.broadcast("room_info", {message: "Updated rooms"})
     else
       render json: { error: 'Room not found' }, status: :not_found
     end
@@ -300,7 +310,12 @@ class RoomActionController < ApplicationController
 
     match = Match.new(nickname: nickname, sps: sps, accuracy: accuracy, user_id: user_id)
 
+
     if match.valid?
+      user = User.find_by(id: user_id)
+      count = user['count_race']
+      user.update(count_race: count + 1)
+
       match.save
       render json: { status: 'success', match: match }, status: :created
     else
